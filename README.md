@@ -1,5 +1,5 @@
 # Progetto-OO-BD-
-Progetto di Object Orientation e Basi di dati I -tracci 2 - ID gruppo :15
+Progetto di Object Orientation e Basi di dati I -traccia 2 - ID gruppo :15
 TRACCIA 2: SISTEMA DI PLANNING PER GESTIONE DI PROGETTI 
 Si sviluppi un sistema informativo, composto da una base di dati relazionale e un applicativo Java dotato di
 GUI (Swing o JavaFX), per la gestione di progetti in un’azienda. Si tenga traccia dei partecipanti al progetto,
