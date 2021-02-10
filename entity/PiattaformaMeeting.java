@@ -1,0 +1,39 @@
+package entity;
+
+import java.util.ArrayList;
+
+public class PiattaformaMeeting {
+	
+	private String nomePiattaforma;
+	private int limitePartecipanti;
+	private ArrayList<MeetingTelematico> meetingTelematici;
+	
+	//Costruttore
+	
+	public PiattaformaMeeting(String nomePiattaforma, int limitePartecipanti) {
+		super();
+		this.nomePiattaforma = nomePiattaforma;
+		this.limitePartecipanti = limitePartecipanti;
+	}
+
+	//Getter e Setter
+	
+	public String getNomePiattaforma() {
+		return nomePiattaforma;
+	}
+
+	public void setNomePiattaforma(String nomePiattaforma) {
+		this.nomePiattaforma = nomePiattaforma;
+	}
+
+	public int getLimitePartecipanti() {
+		return limitePartecipanti;
+	}
+
+	public void setLimitePartecipanti(int limitePartecipanti) {
+		this.limitePartecipanti = limitePartecipanti;
+	}
+	
+	
+
+}
