@@ -121,7 +121,7 @@ public class Progetto {
 	}
 
 	public void setAmbiti(ArrayList<Ambito> ambiti) {
-		this.ambiti = new ArrayList<Ambito>();
+		this.ambiti = ambiti;
 	}
 
 	public PartecipanteProgetto getProjectManager() {
@@ -137,7 +137,7 @@ public class Progetto {
 	}
 
 	public void setPartecipantiProgetto(ArrayList<PartecipanteProgetto> partecipantiProgetto) {
-		this.partecipantiProgetto = new ArrayList<PartecipanteProgetto>();
+		this.partecipantiProgetto = partecipantiProgetto;
 	}
 
 }

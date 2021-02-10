@@ -119,7 +119,7 @@ public class MeetingFisico {
 	}
 
 	public void setPartecipantiMeetingFisico(ArrayList<Dipendente> partecipantiMeetingFisico) {
-		this.partecipantiMeetingFisico = new ArrayList<Dipendente>();
+		this.partecipantiMeetingFisico = partecipantiMeetingFisico;
 	}
 
 }

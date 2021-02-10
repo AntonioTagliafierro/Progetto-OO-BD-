@@ -120,7 +120,7 @@ public class MeetingTelematico {
 	}
 
 	public void setPartecipantiMeetingTelematico(ArrayList<Dipendente> partecipantiMeetingTelematico) {
-		this.partecipantiMeetingTelematico = new ArrayList<Dipendente>();
+		this.partecipantiMeetingTelematico = partecipantiMeetingTelematico;
 	}
 
 }
