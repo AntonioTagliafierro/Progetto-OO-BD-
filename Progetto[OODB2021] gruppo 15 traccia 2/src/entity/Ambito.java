@@ -12,7 +12,7 @@ public class Ambito {
 	public Ambito(String nomeAmbito, ArrayList<Progetto> progetti) {
 		super();
 		this.nomeAmbito = nomeAmbito;
-		this.progetti = progetti;
+		this.progetti = new ArrayList <Progetto>();
 	}
 
 	//Getter e Setter

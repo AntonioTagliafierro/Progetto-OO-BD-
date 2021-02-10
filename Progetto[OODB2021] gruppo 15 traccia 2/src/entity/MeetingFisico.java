@@ -1,28 +1,28 @@
 package entity;
 
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class MeetingFisico  {
-	
+public class MeetingFisico {
+
 	private String codMeetingFisico;
 	private String nomeMeetingFisico;
-	private Date dataMeetingFisico;
-	private Time oraInizioMeetingFisico;
+	private LocalDate dataMeetingFisico;
+	private LocalTime oraInizioMeetingFisico;
 	private int durataMeetingFisico;
 	private String descrizioneMeetingFisico;
 	private SalaMeeting sala;
-	private ArrayList <Dipendente> partecipantiMeetingFisico;
-	
-	//Costruttori
-	
+	private ArrayList<Dipendente> partecipantiMeetingFisico;
+
+	// Costruttori
+
 	public MeetingFisico(String codMeetingFisico) {
 		super();
 		this.codMeetingFisico = codMeetingFisico;
 	}
 
-	public MeetingFisico(String nomeMeetingFisico, Date dataMeetingFisico, Time oraInizioMeetingFisico,
+	public MeetingFisico(String nomeMeetingFisico, LocalDate dataMeetingFisico, LocalTime oraInizioMeetingFisico,
 			int durataMeetingFisico, String descrizioneMeetingFisico, SalaMeeting sala) {
 		super();
 		this.nomeMeetingFisico = nomeMeetingFisico;
@@ -33,18 +33,18 @@ public class MeetingFisico  {
 		this.sala = sala;
 	}
 
-	public MeetingFisico(String codMeetingFisico, String nomeMeetingFisico, Date dataMeetingFisico, SalaMeeting sala) {
+	public MeetingFisico(String codMeetingFisico, String nomeMeetingFisico, LocalDate dataMeetingFisico,
+			SalaMeeting sala) {
 		super();
 		this.codMeetingFisico = codMeetingFisico;
 		this.nomeMeetingFisico = nomeMeetingFisico;
 		this.dataMeetingFisico = dataMeetingFisico;
 		this.sala = sala;
 	}
-	
 
-	public MeetingFisico(String codMeetingFisico, String nomeMeetingFisico, Date dataMeetingFisico,
-			Time oraInizioMeetingFisico, int durataMeetingFisico, String descrizioneMeetingFisico, SalaMeeting sala,
-			ArrayList<Dipendente> partecipantiMeetingFisico) {
+	public MeetingFisico(String codMeetingFisico, String nomeMeetingFisico, LocalDate dataMeetingFisico,
+			LocalTime oraInizioMeetingFisico, int durataMeetingFisico, String descrizioneMeetingFisico,
+			SalaMeeting sala, ArrayList<Dipendente> partecipantiMeetingFisico) {
 		super();
 		this.codMeetingFisico = codMeetingFisico;
 		this.nomeMeetingFisico = nomeMeetingFisico;
@@ -53,11 +53,11 @@ public class MeetingFisico  {
 		this.durataMeetingFisico = durataMeetingFisico;
 		this.descrizioneMeetingFisico = descrizioneMeetingFisico;
 		this.sala = sala;
-		this.partecipantiMeetingFisico = partecipantiMeetingFisico;
+		this.partecipantiMeetingFisico = new ArrayList<Dipendente>();
 	}
 
-	//Getter e Setter
-	
+	// Getter e Setter
+
 	public String getCodMeetingFisico() {
 		return codMeetingFisico;
 	}
@@ -74,19 +74,19 @@ public class MeetingFisico  {
 		this.nomeMeetingFisico = nomeMeetingFisico;
 	}
 
-	public Date getDataMeetingFisico() {
+	public LocalDate getDataMeetingFisico() {
 		return dataMeetingFisico;
 	}
 
-	public void setDataMeetingFisico(Date dataMeetingFisico) {
+	public void setDataMeetingFisico(LocalDate dataMeetingFisico) {
 		this.dataMeetingFisico = dataMeetingFisico;
 	}
 
-	public Time getOraInizioMeetingFisico() {
+	public LocalTime getOraInizioMeetingFisico() {
 		return oraInizioMeetingFisico;
 	}
 
-	public void setOraInizioMeetingFisico(Time oraInizioMeetingFisico) {
+	public void setOraInizioMeetingFisico(LocalTime oraInizioMeetingFisico) {
 		this.oraInizioMeetingFisico = oraInizioMeetingFisico;
 	}
 
@@ -119,9 +119,7 @@ public class MeetingFisico  {
 	}
 
 	public void setPartecipantiMeetingFisico(ArrayList<Dipendente> partecipantiMeetingFisico) {
-		this.partecipantiMeetingFisico = partecipantiMeetingFisico;
+		this.partecipantiMeetingFisico = new ArrayList<Dipendente>();
 	}
 
-	
-	
 }

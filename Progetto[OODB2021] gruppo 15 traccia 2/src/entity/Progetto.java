@@ -1,7 +1,7 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Progetto {
 
@@ -9,8 +9,8 @@ public class Progetto {
 	private String codProgetto;
 	private String nomeProgetto;
 	private String tipologiaProgetto;
-	private Date dataInizioProgetto;
-	private Date dataScadenzaProgetto;
+	private LocalDate dataInizioProgetto;
+	private LocalDate dataScadenzaProgetto;
 	private String statusProgetto;
 	private String nomeCliente;
 	private String descrizioneProgetto;
@@ -33,9 +33,10 @@ public class Progetto {
 		this.statusProgetto = statusProgetto;
 	}
 
-	public Progetto(String nomeProgetto, String tipologiaProgetto, Date dataInizioProgetto, Date dataScadenzaProgetto,
-			String statusProgetto, String nomeCliente, String descrizioneProgetto, ArrayList<Ambito> ambiti,
-			PartecipanteProgetto projectManager, ArrayList<PartecipanteProgetto> partecipantiProgetto) {
+	public Progetto(String nomeProgetto, String tipologiaProgetto, LocalDate dataInizioProgetto,
+			LocalDate dataScadenzaProgetto, String statusProgetto, String nomeCliente, String descrizioneProgetto,
+			ArrayList<Ambito> ambiti, PartecipanteProgetto projectManager,
+			ArrayList<PartecipanteProgetto> partecipantiProgetto) {
 		super();
 		this.nomeProgetto = nomeProgetto;
 		this.tipologiaProgetto = tipologiaProgetto;
@@ -44,9 +45,9 @@ public class Progetto {
 		this.statusProgetto = statusProgetto;
 		this.nomeCliente = nomeCliente;
 		this.descrizioneProgetto = descrizioneProgetto;
-		this.ambiti = ambiti;
+		this.ambiti = new ArrayList<Ambito>();
 		this.projectManager = projectManager;
-		this.partecipantiProgetto = partecipantiProgetto;
+		this.partecipantiProgetto = new ArrayList<PartecipanteProgetto>();
 	}
 
 	// Getter e Setter
@@ -75,19 +76,19 @@ public class Progetto {
 		this.tipologiaProgetto = tipologiaProgetto;
 	}
 
-	public Date getDataInizioProgetto() {
+	public LocalDate getDataInizioProgetto() {
 		return dataInizioProgetto;
 	}
 
-	public void setDataInizioProgetto(Date dataInizioProgetto) {
+	public void setDataInizioProgetto(LocalDate dataInizioProgetto) {
 		this.dataInizioProgetto = dataInizioProgetto;
 	}
 
-	public Date getDataScadenzaProgetto() {
+	public LocalDate getDataScadenzaProgetto() {
 		return dataScadenzaProgetto;
 	}
 
-	public void setDataScadenzaProgetto(Date dataScadenzaProgetto) {
+	public void setDataScadenzaProgetto(LocalDate dataScadenzaProgetto) {
 		this.dataScadenzaProgetto = dataScadenzaProgetto;
 	}
 
@@ -120,7 +121,7 @@ public class Progetto {
 	}
 
 	public void setAmbiti(ArrayList<Ambito> ambiti) {
-		this.ambiti = ambiti;
+		this.ambiti = new ArrayList<Ambito>();
 	}
 
 	public PartecipanteProgetto getProjectManager() {
@@ -136,7 +137,7 @@ public class Progetto {
 	}
 
 	public void setPartecipantiProgetto(ArrayList<PartecipanteProgetto> partecipantiProgetto) {
-		this.partecipantiProgetto = partecipantiProgetto;
+		this.partecipantiProgetto = new ArrayList<PartecipanteProgetto>();
 	}
 
 }

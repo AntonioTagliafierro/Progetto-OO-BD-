@@ -1,18 +1,18 @@
 package entity;
 
 public class Residenza {
-	
-	//Attributi
-	
+
+	// Attributi
+
 	private String città;
 	private String provincia;
 	private String cap;
 	private String via;
 	private String nCivico;
 	private Dipendente dipendente;
-	
-	//Costruttore
-	
+
+	// Costruttore
+
 	public Residenza(String città, String provincia, String cap, String via, String nCivico, Dipendente dipendente) {
 		super();
 		this.città = città;
@@ -23,7 +23,7 @@ public class Residenza {
 		this.dipendente = dipendente;
 	}
 
-	//Getter e Setter
+	// Getter e Setter
 	public String getCittà() {
 		return città;
 	}
@@ -71,7 +71,5 @@ public class Residenza {
 	public void setDipendente(Dipendente dipendente) {
 		this.dipendente = dipendente;
 	}
-	
-	
 
 }

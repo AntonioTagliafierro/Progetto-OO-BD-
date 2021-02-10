@@ -15,6 +15,16 @@ public class PiattaformaMeeting {
 		this.nomePiattaforma = nomePiattaforma;
 		this.limitePartecipanti = limitePartecipanti;
 	}
+	
+
+	public PiattaformaMeeting(String nomePiattaforma, int limitePartecipanti,
+			ArrayList<MeetingTelematico> meetingTelematici) {
+		super();
+		this.nomePiattaforma = nomePiattaforma;
+		this.limitePartecipanti = limitePartecipanti;
+		this.meetingTelematici = meetingTelematici;
+	}
+
 
 	//Getter e Setter
 	
@@ -32,6 +42,14 @@ public class PiattaformaMeeting {
 
 	public void setLimitePartecipanti(int limitePartecipanti) {
 		this.limitePartecipanti = limitePartecipanti;
+	}
+
+	public ArrayList<MeetingTelematico> getMeetingTelematici() {
+		return meetingTelematici;
+	}
+
+	public void setMeetingTelematici(ArrayList<MeetingTelematico> meetingTelematici) {
+		this.meetingTelematici = meetingTelematici;
 	}
 	
 	
