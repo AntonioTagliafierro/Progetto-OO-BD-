@@ -630,3 +630,88 @@ BEGIN
 
 END;
 $BODY$;
+
+Trigger che solleva un exception se si tenta di inserire dei partecipanti quando il progetto è finito
+
+CREATE TRIGGER Trigger_controllovaliditàdatainserimentopartecipantiprogetto
+    BEFORE INSERT
+    ON partecipanteprogetto
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo validità data inserimento partecipanti progetto();
+
+CREATE FUNCTION Controllo validità data inserimento partecipanti progetto()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+	SELECT status
+	FROM PROGETTO AS PR
+	WHERE PR.codP = NEW.codP;
+	
+	IF(status LIKE FINITO ) THEN
+		RAISE EXCEPTION 'ATTENZONE non puoi inserire dei partecipanti ad un progetto finito';
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+Trigger che solleva un exception se si tenta di inserire dei partecipanti ad un meeting fisico passato
+
+CREATE TRIGGER Trigger_validitàdatainserimentopartecipantimeetingfisico
+    BEFORE INSERT
+    ON partecipantemeetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo validitàdatainserimento partecipanti meeting fisic();
+
+CREATE FUNCTION Controllo validitàdatainserimento partecipanti meeting fisic()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	datacorrente DATE;	
+BEGIN
+	SELECT datamf
+	FROM meetingfisico AS mf
+	WHERE mf.codmf = NEW.codmf;
+	
+	datacorrente=CURRENT_DATE;
+	
+	IF(datacorrente < datamf ) THEN
+		RAISE EXCEPTION 'ATTENZONE non puoi inserire dei partecipanti ad un meeting passato';
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+
+
+Trigger che solleva un exception se si tenta di inserire dei partecipanti ad un meeting telematico passato
+
+CREATE TRIGGER Trigger_controllovaliditàdatainserimentopartecipantimeetingtel
+    BEFORE INSERT
+    ON partecipantemeetingtelematico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo validitàdatainserimento partecipanti meeting telemat();
+
+CREATE FUNCTION Controllo validitàdatainserimento partecipanti meeting telemat()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	datacorrente DATE;	
+BEGIN
+	SELECT datamt
+	FROM meetingtelematico AS mt
+	WHERE mt.codmt = NEW.codmt;
+	
+	datacorrente=CURRENT_DATE;
+	
+	IF(datacorrente < datamt ) THEN
+		RAISE EXCEPTION 'ATTENZONE non puoi inserire dei partecipanti ad un meeting passato';
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
