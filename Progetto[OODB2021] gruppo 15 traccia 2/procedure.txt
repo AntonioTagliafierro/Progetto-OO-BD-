@@ -1,0 +1,44 @@
+Procedura che,una volta richiamata dall'applicativo,imposta lo status del dipendente su attivo
+
+CREATE OR REPLACE PROCEDURE attiva_dipendente(codicef DIPENDENTE.codF%TYPE)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+	
+	UPDATE DIPENDENTE 
+	SET status = 'ATTIVO'
+	WHERE codF = codiceF;
+
+END;
+$BODY$;
+
+
+Procedura che,una volta richiamata dall'applicativo,imposta lo status del dipendente su non attivo
+
+CREATE OR REPLACE PROCEDURE public.disattiva_dipendente(codicef DIPENDENTE.codF%TYPE)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+	
+	UPDATE DIPENDENTE 
+	SET status = 'NON ATTIVO'
+	WHERE codF = codiceF;
+
+END;
+$BODY$;
+
+
+Procedura che,una volta richiamata dall'applicativo,imposta lo status del progetto su finito
+
+
+CREATE OR REPLACE PROCEDURE public.fine_progetto(codicep PROGETTO.codP%TYPE)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+	
+	UPDATE PROGETTO 
+	SET status = 'FINITO'
+	WHERE codF = codiceF;
+
+END;
+$BODY$;
