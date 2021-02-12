@@ -1,0 +1,632 @@
+Trigger che a seguito di un aggiornamento su un dipendente ,imposta a zero lo stipendio dei dipendenti non attivi
+
+CREATE TRIGGER "Trigger_annullamentosalario"
+    AFTER UPDATE 
+    ON dipendente
+    FOR EACH ROW
+    EXECUTE PROCEDURE Annullamento Salario();
+
+CREATE FUNCTION Annullamento Salario()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+
+    UPDATE DIPENDENTE
+    SET salario = 0
+    WHERE status LIKE 'NON ATTIVO';
+
+    RETURN NULL;
+END;
+$BODY$;
+
+
+Trigger che prima di inserire un meeting fisico,controlla che la sala dove dovrebbe svolgersi non sia già occupata in quel lasso temporale
+
+CREATE TRIGGER Trigger_controllosovrapposizionemeetinginunasala
+    BEFORE INSERT
+    ON meetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo Sovrapposizione Meeting in una Sala();
+
+CREATE FUNCTION public."Controllo Sovrapposizione Meeting in una Sala"()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    IF EXISTS (SELECT *
+		   FROM MEETINGFISICO AS MF
+		   WHERE NEW.nomeSala = MF.nomeSala AND NEW.dataMF = MF.dataMF AND
+		   ((NEW.OraI BETWEEN MF.OraI AND MF.OraF) OR
+		   (NEW.OraF BETWEEN MF.OraI AND MF.OraF)OR(MF.OraI BETWEEN NEW.OraI AND NEW.OraF)
+			OR(MF.OraF BETWEEN NEW.OraI AND NEW.OraF))) THEN
+	RAISE EXCEPTION 'ATTENZIONE sala già occupata';
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+Trigger che prima di inserire un meeting fisico o a seguito di un'aggiunta di partecipanti ad un meeting fisico già esistente,
+controlla che il numero di partecipanti non superi il numero di posti della sala dove si terrà il meeting
+
+CREATE TRIGGER Trigger_controllonumeromaxpartecipantimeetingfisico
+    BEFORE INSERT
+    ON partecipantemeetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo NumeroMaxPartecipantiMeetingFisico();
+
+CREATE FUNCTION public.Controllo NumeroMaxPartecipantiMeetingFisico()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    numPostiDisponibili INTEGER;
+    numDipendenti INTEGER;
+BEGIN
+    SELECT nPosti INTO numPostiDisponibili
+    FROM MEETINGFISICO AS MF NATURAL JOIN SALAMEETING AS S
+    WHERE MF.CodMF = NEW.CodMF;
+
+    SELECT COUNT(CodF) INTO numDipendenti
+    FROM PARTECIPANTEMEETINGFISICO AS PMF
+    WHERE PMF.CodMF = NEW.CodMF
+    GROUP BY PMF.CodMF;
+      
+    IF(numDipendenti > numPostiDisponiili) THEN
+	RAISE EXCEPTION 'ATTENZIONE posti esauriti';
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+Trigger che prima dell'inserimento di un meeting fisico controlla che i partecipanti siano almeno due
+CREATE TRIGGER Trigger_controllonumerominpartecipantimeetingfisico
+    BEFORE INSERT
+    ON partecipantemeetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo NumeroMinPartecipantiMeetingFisico();
+
+CREATE FUNCTION Controllo NumeroMinPartecipantiMeetingFisico()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    numDipendenti INTEGER;
+BEGIN
+
+	SELECT COUNT(CodF) INTO numDipendenti
+    FROM PARTECIPANTEMEETINGFISICO AS PMF
+    WHERE PMF.CodMF = NEW.CodMF
+    GROUP BY PMF.CodMF;
+      
+    IF(numDipendenti < 2) THEN
+		RAISE EXCEPTION 'ATTENZIONE hai inserito un solo partecipante';
+   
+   	END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che controlla che un partecipante al meeting fisico non abbia altri meeting programmati in quel lasso di tempo
+
+CREATE TRIGGER Trigger_controllosovrapposizionemeetingperpartecipantemeetingfi
+    BEFORE INSERT
+    ON public.partecipantemeetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo Sovrapposizione Meeting Per PartecipanteMeetingFisico();
+
+
+CREATE FUNCTION Controllo Sovrapposizione Meeting Per PartecipanteMeetingFisico()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    dataMeeting DATE;
+    oraInizioMeeting TIME;
+    oraFineMeeting TIME;
+BEGIN
+    SELECT MF.Data, MF.OraI, MF.OraF INTO dataMeeting, oraInizioMeeting, oraFineMeeting
+    FROM PARTECIPANTEMEETINGFISICO AS PMF NATURAL JOIN MEETINGFISICO AS MF
+    WHERE NEW.CodF = PMF.CodF AND NEW.CodMF = MF.CodMF;
+
+    IF EXISTS (SELECT *
+		   FROM PARTECIPANTEMEETINGFISICO AS PMF NATURAL JOIN
+		   MEETINGFISICO AS MF
+		   WHERE NEW.CodF = PMF.CodF AND dataMeeting = MF.Data AND 
+		       ((oraInizioMeeting BETWEEN MF.OraI AND MF.OraF) OR
+			(oraFineMeeting BETWEEN MF.OraI AND MF.OraF)OR(MF.OraI BETWEEN oraInizioMeeting AND oraFineMeeting)
+				OR(MF.OraF BETWEEN oraInizioMeeting AND oraFineMeeting)))
+	OR EXISTS (SELECT *
+			FROM PARTECIPAMT AS PMT NATURAL JOIN
+				MEETINGT AS MT
+			WHERE NEW.CodF = PMT.CodF AND dataMeeting = MT.Data AND
+			    ((oraInizioMeeting BETWEEN MT.OraI AND MT.OraF) OR
+			    (oraFineMeeting BETWEEN MT.OraI AND MT.OraF)OR(MT.OraI BETWEEN oraInizioMeeting AND oraFineMeeting)
+				OR(MT.OraF BETWEEN oraInizioMeeting AND oraFineMeeting))) THEN
+	RAISE EXCEPTION 'In quelle ore questo dipendente partecipa già ad un altro meeting';
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che controlla che un partecipante al meeting telematico non abbia altri meeting programmati in quel lasso di tempo
+
+CREATE TRIGGER Trigger_controllosovrapposizionemeetingperpartecipantemeetingte
+    BEFORE INSERT
+    ON partecipantemeetingtelematico
+    FOR EACH ROW
+    EXECUTE PROCEDURE ControlloSovrapposizioneMeetingPerPartecipanteMeetingTelematico();
+
+CREATE FUNCTION ControlloSovrapposizioneMeetingPerPartecipanteMeetingTelematico()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'F
+AS $BODY$
+DECLARE
+    dataMeeting DATE;
+    oraInizioMeeting TIME;
+    oraFineMeeting TIME;
+BEGIN
+    SELECT MT.Data, MT.OraI, MT.OraF INTO dataMeeting, oraInizioMeeting, oraFineMeeting
+    FROM PARTECIPANTEMEETINGTELEMATICO AS PMT NATURAL JOIN MEETINGTELEMATICO AS MT
+    WHERE NEW.CodF = PMT.CodF AND NEW.CodTF = MT.CodMT;
+
+    IF EXISTS (SELECT *
+		   FROM PARTECIPANTEMEETINGFISICO AS PMF NATURAL JOIN
+		   MEETINGFISICO AS MF
+		   WHERE NEW.CodF = PMF.CodF AND dataMeeting = MF.Data AND 
+		       ((oraInizioMeeting BETWEEN MF.OraI AND MF.OraF) OR
+			(oraFineMeeting BETWEEN MF.OraI AND MF.OraF)OR(MF.OraI BETWEEN oraInizioMeeting AND oraFineMeeting)
+				OR(MF.OraF BETWEEN oraInizioMeeting AND oraFineMeeting)))
+	OR EXISTS (SELECT *
+			FROM PARTECIPAMT AS PMT NATURAL JOIN
+				MEETINGT AS MT
+			WHERE NEW.CodF = PMT.CodF AND dataMeeting = MT.Data AND
+			    ((oraInizioMeeting BETWEEN MT.OraI AND MT.OraF) OR
+			    (oraFineMeeting BETWEEN MT.OraI AND MT.OraF)OR(MT.OraI BETWEEN oraInizioMeeting AND oraFineMeeting)
+				OR(MT.OraF BETWEEN oraInizioMeeting AND oraFineMeeting))) THEN
+	RAISE EXCEPTION 'In quelle ore questo dipendente partecipa già ad un altro meeting';
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che prima di inserire un meeting telematico o a seguito di un'aggiunta di partecipanti ad un meeting telematico già esistente,
+controlla che il numero di partecipanti non superi il numero max di dispositivi ammessi dalla piattaforma dove si terrà il meeting
+
+CREATE TRIGGER Trigger_controllonumeromaxpartecipantimeetingtelematico
+    BEFORE INSERT
+    ON partecipantemeetingtelematico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo NumeroMaxPartecipantiMeetingTelematico();
+
+CREATE FUNCTION Controllo NumeroMaxPartecipantiMeetingTelematico()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    numLimitePartecipanti INTEGER;
+    numDipendenti INTEGER;
+BEGIN
+    SELECT nMaxDispositivi INTO numLimitePartecipanti
+    FROM PIATTAFORMAMEETING AS PM NATURAL JOIN MEETINGTELEMATICO AS MT
+    WHERE MT.nomePiattaforma = NEW.nomePiattaforma;
+
+    SELECT COUNT(CodF) INTO numDipendenti
+    FROM PARTECIPANTEMEETINGTELEMATICO AS PMT
+    WHERE PMT.CodMT = NEW.CodMT
+    GROUP BY PMT.CodMT;
+      
+    IF(numDipendenti > numLimitePartecipanti) THEN
+		RAISE EXCEPTION 'ATTENZIONE superato numero massimo dispositivi ammessi ';
+    
+	END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che prima dell'inserimento di un meeting telematico controlla che i partecipanti siano almeno due
+
+
+CREATE TRIGGER Trigger_controllonumerominpartecipantimeetingtelematico
+    BEFORE INSERT
+    ON partecipantemeetingtelematico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo NumeroMinPartecipantiMeetingTelematico();
+
+CREATE FUNCTION Controllo NumeroMinPartecipantiMeetingTelematico()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    numDipendenti INTEGER;
+BEGIN
+
+    SELECT COUNT(CodF) INTO numDipendenti
+    FROM PARTECIPANTEMEETINGTELEMATICO AS PMT
+    WHERE PMT.CodMT = NEW.CodMT
+    GROUP BY PMT.CodMT;
+      
+    IF(numDipendenti < 2 ) THEN
+		RAISE EXCEPTION 'ATTENZIONE hai inserito un solo partecipante ';
+    
+	END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che a seguito di una rimozione da un meeting ,diminuisce la valutazione dei partecipanti rimossi
+
+CREATE TRIGGER Trigger_decrementavalutazionepartecipantemeetingfisico
+    AFTER DELETE
+    ON partecipantemeetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Decrementa Valutazione Partecipanti Meeting Eliminati();
+
+CREATE TRIGGER Trigger_decrementavalutazionepartecipantemeetingtelematicoelimi
+    AFTER DELETE
+    ON partecipantemeetingtelematico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Decrementa Valutazione Partecipanti Meeting Eliminati();
+
+CREATE FUNCTION Decrementa Valutazione Partecipanti Meeting Eliminati()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    valutazioneAggiornata REAL;
+BEGIN
+    SELECT valutazione INTO valutazioneAggiornata
+    FROM DIPENDENTE
+    WHERE CodF = OLD.CodF;
+
+    valutazioneAggiornata := valutazione - 0.5;
+
+    UPDATE DIPENDENTE
+    SET valutazione = valutazioneAggiornata
+    WHERE CodF = OLD.CodF;
+
+    RETURN NULL;
+END;
+$BODY$;
+
+
+Trigger che a seguito di un'aggiunta ad un meeting,aumenta la valutazione dei partecipanti aggiunti
+
+
+CREATE TRIGGER Trigger_incrementovalutazionepartecipantemeetingfisico
+    AFTER INSERT
+    ON partecipantemeetingfisico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Incrementa Valutazione Partecipanti Meeting();
+
+CREATE TRIGGER Trigger_incrementovalutazionepartecipantemeetingtelematico
+    AFTER INSERT
+    ON partecipantemeetingtelematico
+    FOR EACH ROW
+    EXECUTE PROCEDURE Incrementa Valutazione Partecipanti Meeting();
+
+CREATE FUNCTION Incrementa Valutazione Partecipanti Meeting()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    valutazioneAggiornata REAL;
+BEGIN
+    SELECT valutazione INTO valutazioneAggiornata
+    FROM DIPENDENTE
+    WHERE CodF = NEW.CodF;
+
+    valutazioneAggiornata := valutazione + 0.5;
+
+    UPDATE DIPENDENTE
+    SET valutazione = valutazioneAggiornata
+    WHERE CodF = NEW.CodF;
+
+    RETURN NULL;
+END;
+$BODY$;
+
+
+Trigger che prima di inserire un progetto controlla che abbia il project manager
+
+CREATE TRIGGER Trigger_controllopresenzaprojectmanager
+    BEFORE INSERT
+    ON partecipanteprogetto
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo Presenza Project Manager();
+
+CREATE FUNCTION Controllo Presenza Project Manager()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+	IF NOT EXISTS (SELECT *
+               FROM PARTECIPANTEPROGETTO AS P
+               WHERE P.CodP = NEW.CodP AND P.Ruolo LIKE 'PROJECT MANAGER') THEN
+		RAISE EXCEPTION 'ATTENZIONE Il progetto deve avere un Project Manager';
+    END IF;
+    
+	RETURN NEW;
+END;
+$BODY$;
+
+
+Triggere che controlla che,prima di inserire i partecipanti di un progetto,il project manager sia uno
+
+CREATE TRIGGER Trigger_unicitàprojectmanager
+    BEFORE INSERT
+    ON partecipanteprogetto
+    FOR EACH ROW
+    WHEN (new.ruolo LIKE 'PROJECT MANAGER')
+    EXECUTE PROCEDURE Unicità Project Manager();
+
+CREATE FUNCTION Unicità Project Manager()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    IF EXISTS (SELECT *
+               FROM PARTECIPANTEPROGETTO AS P
+               WHERE P.CodP = NEW.CodP AND P.Ruolo LIKE 'PROJECT MANAGER') THEN
+        RAISE EXCEPTION 'ATTENZIONE non puoi inserire un altro project manager';
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che decrementa la valutazione dei partecipanti non project manager a seguito di una rimozione da un progetto
+
+CREATE TRIGGER Trigger_decrementavalutazionepartecipantiprogettoeliminati
+    AFTER DELETE
+    ON partecipanteprogetto
+    FOR EACH ROW
+    WHEN (old.ruolo NOT LIKE 'PROJECT MANAGER')
+    EXECUTE PROCEDURE Decrementa Valutazione Partecipanti Progetto Eliminati();
+
+CREATE FUNCTION Decrementa Valutazione Partecipanti Progetto Eliminati()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    valutazioneAggiornata REAL;
+BEGIN
+    SELECT valutazione INTO valutazioneAggiornata
+    FROM DIPENDENTE
+    WHERE CodF = OLD.CodF;
+
+    valutazioneAggiornata := valutazione - 1;
+
+    UPDATE DIPENDENTE
+    SET valutazione = valutazioneAggiornata
+    WHERE CodF = OLD.CodF;
+
+    RETURN NULL;
+END;
+$BODY$;
+
+
+Trigger che decrementa la valutazione del project manager a seguito di una rimozione da un progetto
+
+CREATE TRIGGER Trigger_decrementavalutazioneprojectmanagereliminato
+    AFTER DELETE
+    ON partecipanteprogetto
+    FOR EACH ROW
+    WHEN (old.ruolo LIKE 'PROJECT MANAGER')
+    EXECUTE PROCEDURE Decrementa Valutazione Project Manager Eliminato();
+
+CREATE FUNCTION Decrementa Valutazione Project Manager Eliminato()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    valutazioneAggiornata REAL;
+BEGIN
+    SELECT valutazione INTO valutazioneAggiornata
+    FROM DIPENDENTE
+    WHERE CodF = OLD.CodF;
+
+    valutazioneAggiornata := valutazione - 2;
+
+    UPDATE DIPENDENTE
+    SET valutazione = valutazioneAggiornata
+    WHERE CodF = OLD.CodF;
+
+    RETURN NULL;
+END;
+$BODY$;
+
+
+Trigger che incrementa la valutazione dei partecipanti dopo essere stati aggiunti ad un progetto
+
+CREATE TRIGGER Trigger_incrementovalutazionepartecipantiprogetto
+    AFTER INSERT
+    ON public.partecipanteprogetto
+    FOR EACH ROW
+    WHEN (new.ruolo NOT LIKE 'PROJECT MANAGER')
+    EXECUTE PROCEDURE Incrementa Valutazione Partecipanti Progetto();
+
+CREATE FUNCTION Incrementa Valutazione Partecipanti Progetto()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    valutazioneAggiornata REAL;
+BEGIN
+    SELECT valutazione INTO valutazioneAggiornata
+    FROM DIPENDENTE
+    WHERE CodF = NEW.CodF;
+
+    valutazioneAggiornata := valutazione + 1;
+
+    UPDATE DIPENDENTE
+    SET valutazione = valutazioneAggiornata
+    WHERE CodF = NEW.CodF;
+
+    RETURN NULL;
+END;
+$BODY$;
+
+Trigger che aumenta la valutazione del project manager dopo essere stato aggiunto ad un progetto
+
+CREATE TRIGGER Trigger_incrementovalutazioneprojectmanager
+    AFTER INSERT
+    ON partecipanteprogetto
+    FOR EACH ROW
+    WHEN (new.ruolo LIKE 'PROJECT MANAGER')
+    EXECUTE PROCEDURE Incrementa Valutazione Project Manager();
+
+CREATE FUNCTION Incrementa Valutazione Project Manager()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    valutazioneAggiornata REAL;
+BEGIN
+    SELECT valutazione INTO valutazioneAggiornata
+    FROM DIPENDENTE
+    WHERE CodF = NEW.CodF;
+
+    valutazioneAggiornata := valutazione + 2;
+
+    UPDATE DIPENDENTE
+    SET valutazione = valutazioneAggiornata
+    WHERE CodF = NEW.CodF;
+
+    RETURN NULL;
+END;
+$BODY$;
+
+Trigger che,quando viene inserito un progetto,controlla se la data di fine progetto è già passata
+
+CREATE TRIGGER Tiggre_validitàdatafineprogetto
+    AFTER INSERT
+    ON progetto
+    FOR EACH ROW
+    EXECUTE PROCEDURE Controllo datafineprogetto();
+
+
+CREATE FUNCTION Controllo datafineprogetto()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	datacorrente DATE;
+	datafineprogetto DATE;
+BEGIN
+	SELECT dataF INTO datafineprogetto
+	FROM PROGETTO AS PR
+	WHERE PR.codP = NEW.codP;
+	
+	datacorrente = CURRENT_DATE;
+	IF(datacorrente < datafineprogetto ) THEN
+		SET status = 'FINITO';
+		RAISE EXCEPTION 'ATTENZIONE la data indicata come di fine progetto è già passata';
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+
+Trigger che se,a seguito di un aggiornamento,la data di fine progetto è passata ,imposta lo stato a finito
+
+CREATE TRIGGER Trigger_statofinaledopoaggiornamento
+    AFTER UPDATE 
+    ON progetto
+    FOR EACH ROW
+    EXECUTE PROCEDURE Statofinaledopoaggiornamento();
+
+CREATE FUNCTION Statofinaledopoaggiornamento()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	datacorrente DATE;
+	datafineprogetto DATE;
+BEGIN
+	SELECT dataF INTO datafineprogetto
+	FROM PROGETTO AS PR
+	WHERE PR.codP = NEW.codP;
+	
+	datacorrente = CURRENT_DATE;
+	IF(datacorrente < datafineprogetto ) THEN
+		SET status = 'FINITO';
+	END IF;
+	
+	RETURN NEW;
+END;
+$BODY$;
+
+Trigger che dopo aggiornamento di un progetto imposta se è iniziato o approvato in base alla data
+
+CREATE TRIGGER Trigger_statoinizialedopoupdate
+    AFTER UPDATE 
+    ON progetto
+    FOR EACH ROW
+    EXECUTE PROCEDURE Stato iniziale progetto();
+
+CREATE FUNCTION Stato iniziale progetto()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE 
+	datacorrente DATE;
+	datainizialeprogetto DATE;
+BEGIN
+	SELECT dataI INTO datainizialeprogetto
+	FROM PROGETTO AS PR
+	WHERE PR.codP = NEW.codP;
+	
+	datacorrente = CURRENT_DATE;
+	IF(datacorrente >= datainizioprogetto ) THEN
+		SET status = 'INIZIATO';
+	ELSE
+		SET status = 'APPROVATO';
+	END IF;
+
+END;
+$BODY$;
+
+stessa cosa ma quando viene creato
+
+CREATE TRIGGER Trigger_statoinizialeprogetto
+    AFTER INSERT
+    ON progetto
+    FOR EACH ROW
+    EXECUTE PROCEDURE Stato iniziale progetto();
+
+CREATE FUNCTION Stato iniziale progetto()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE 
+	datacorrente DATE;
+	datainizialeprogetto DATE;
+BEGIN
+	SELECT dataI INTO datainizialeprogetto
+	FROM PROGETTO AS PR
+	WHERE PR.codP = NEW.codP;
+	
+	datacorrente = CURRENT_DATE;
+	IF(datacorrente >= datainizioprogetto ) THEN
+		SET status = 'INIZIATO';
+	ELSE
+		SET status = 'APPROVATO';
+	END IF;
+
+END;
+$BODY$;
