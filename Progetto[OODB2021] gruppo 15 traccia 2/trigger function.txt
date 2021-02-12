@@ -643,12 +643,14 @@ CREATE FUNCTION Controllo validità data inserimento partecipanti progetto()
     RETURNS trigger
     LANGUAGE 'plpgsql'
 AS $BODY$
+DECLARE
+	statusprogetto VARCHAR(10);
 BEGIN
-	SELECT status
+	SELECT status INTO statusprogetto
 	FROM PROGETTO AS PR
 	WHERE PR.codP = NEW.codP;
 	
-	IF(status LIKE FINITO ) THEN
+	IF(statusprogetto LIKE 'FINITO' ) THEN
 		RAISE EXCEPTION 'ATTENZONE non puoi inserire dei partecipanti ad un progetto finito';
 	END IF;
 	
@@ -670,14 +672,15 @@ CREATE FUNCTION Controllo validitàdatainserimento partecipanti meeting fisic()
 AS $BODY$
 DECLARE
 	datacorrente DATE;	
+	datameeting DATE;
 BEGIN
-	SELECT datamf
+	SELECT datamf INTO datameeting
 	FROM meetingfisico AS mf
 	WHERE mf.codmf = NEW.codmf;
 	
 	datacorrente=CURRENT_DATE;
 	
-	IF(datacorrente < datamf ) THEN
+	IF(datacorrente < datameeting ) THEN
 		RAISE EXCEPTION 'ATTENZONE non puoi inserire dei partecipanti ad un meeting passato';
 	END IF;
 	
@@ -700,15 +703,16 @@ CREATE FUNCTION Controllo validitàdatainserimento partecipanti meeting telemat(
     LANGUAGE 'plpgsql'
 AS $BODY$
 DECLARE
-	datacorrente DATE;	
+	datacorrente DATE;
+	datameeting DATE;
 BEGIN
-	SELECT datamt
+	SELECT datamt INTO datameeting;
 	FROM meetingtelematico AS mt
 	WHERE mt.codmt = NEW.codmt;
 	
 	datacorrente=CURRENT_DATE;
 	
-	IF(datacorrente < datamt ) THEN
+	IF(datacorrente < datameeting ) THEN
 		RAISE EXCEPTION 'ATTENZONE non puoi inserire dei partecipanti ad un meeting passato';
 	END IF;
 	
