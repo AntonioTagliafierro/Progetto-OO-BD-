@@ -15,7 +15,7 @@ public class Dipendente {
 	private Date dataNascita;
 	private String status;
 	private float valutazione;
-	private float salarioMedio;
+	private double salarioMedio;
 	private String pathFoto;
 	private String nCellulare;
 	private Residenza residenza;
