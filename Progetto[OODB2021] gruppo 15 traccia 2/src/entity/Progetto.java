@@ -10,7 +10,7 @@ public class Progetto {
 	private String nomeProgetto;
 	private String tipologiaProgetto;
 	private LocalDate dataInizioProgetto;
-	private LocalDate dataScadenzaProgetto;
+	private LocalDate dataFineProgetto;
 	private String statusProgetto;
 	private String nomeCliente;
 	private String descrizioneProgetto;
@@ -34,14 +34,14 @@ public class Progetto {
 	}
 
 	public Progetto(String nomeProgetto, String tipologiaProgetto, LocalDate dataInizioProgetto,
-			LocalDate dataScadenzaProgetto, String statusProgetto, String nomeCliente, String descrizioneProgetto,
+			LocalDate dataFineProgetto, String statusProgetto, String nomeCliente, String descrizioneProgetto,
 			ArrayList<Ambito> ambiti, PartecipanteProgetto projectManager,
 			ArrayList<PartecipanteProgetto> partecipantiProgetto) {
 		super();
 		this.nomeProgetto = nomeProgetto;
 		this.tipologiaProgetto = tipologiaProgetto;
 		this.dataInizioProgetto = dataInizioProgetto;
-		this.dataScadenzaProgetto = dataScadenzaProgetto;
+		this.dataFineProgetto = dataFineProgetto;
 		this.statusProgetto = statusProgetto;
 		this.nomeCliente = nomeCliente;
 		this.descrizioneProgetto = descrizioneProgetto;
@@ -84,12 +84,12 @@ public class Progetto {
 		this.dataInizioProgetto = dataInizioProgetto;
 	}
 
-	public LocalDate getDataScadenzaProgetto() {
-		return dataScadenzaProgetto;
+	public LocalDate getDataFineProgetto() {
+		return dataFineProgetto;
 	}
 
-	public void setDataScadenzaProgetto(LocalDate dataScadenzaProgetto) {
-		this.dataScadenzaProgetto = dataScadenzaProgetto;
+	public void setDataFineProgetto(LocalDate dataFineProgetto) {
+		this.dataFineProgetto = dataFineProgetto;
 	}
 
 	public String getStatusProgetto() {

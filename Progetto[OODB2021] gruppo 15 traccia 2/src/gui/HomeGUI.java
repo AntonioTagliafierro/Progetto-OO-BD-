@@ -11,25 +11,36 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
-import java.awt.Image;
-
 import javax.swing.JLabel;
 import java.awt.Toolkit;
+import java.awt.Font;
 
 public class HomeGUI extends JFrame {
 
 	Controller theController;
 
 	private JPanel contentPane;
-
+	private String iconaFrame;
+	private ImageIcon iconaGestioneProgetti;
+	private JButton GestioneProgettibtn;
+	private JButton GestioneDipendentibtn;
+	private JButton GestioneMeetingbtn;
+	private ImageIcon iconaGestioneDipendenti;
+	private ImageIcon iconaGestioneMeeting;
+	private ImageIcon immagineHome;
+	
 	/**
 	 * Create the frame.
 	 */
 	public HomeGUI(Controller c) {
-		String iconaFrame = new String("C:\\Users\\xtony\\git\\Progetto-OO-BD-\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaFrame.png");
+		setResizable(false);
+
+		theController = c;
+
+		iconaFrame = new String(
+				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaFrame.png");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(iconaFrame));
 		setTitle("Projects Management");
-		theController = c;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 717, 456);
@@ -39,36 +50,40 @@ public class HomeGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		ImageIcon iconaGestioneProgetti = new ImageIcon(
-				"C:\\Users\\xtony\\git\\Progetto-OO-BD-\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaGestioneProgettibtn.png");
-		JButton GestioneProgettibtn = new JButton("Gestione Progetti");
+		iconaGestioneProgetti = new ImageIcon(
+				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaGestioneProgettibtn.png");
+		GestioneProgettibtn = new JButton("Gestione Progetti");
+		GestioneProgettibtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		GestioneProgettibtn.setIcon(iconaGestioneProgetti);
 		GestioneProgettibtn.setBounds(0, 46, 189, 60);
 		contentPane.add(GestioneProgettibtn);
 		GestioneProgettibtn.setFocusable(false);
 
-		ImageIcon iconaGestioneMeeting = new ImageIcon(
-				"C:\\Users\\xtony\\git\\Progetto-OO-BD-\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaGestioneMeetingbtn.png");
-		JButton GestioneMeetingbtn = new JButton("Gestione Meeting");
+		iconaGestioneMeeting = new ImageIcon(
+				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaGestioneMeetingbtn.png");
+		GestioneMeetingbtn = new JButton("Gestione Meeting");
+		GestioneMeetingbtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		GestioneMeetingbtn.setIcon(iconaGestioneMeeting);
 		GestioneMeetingbtn.setBounds(0, 178, 189, 60);
 		contentPane.add(GestioneMeetingbtn);
 		GestioneMeetingbtn.setFocusable(false);
 
-		ImageIcon iconaGestioneDipendenti = new ImageIcon(
-				"C:\\Users\\xtony\\git\\Progetto-OO-BD-\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaGestioneDipendentibtn.png");
-		JButton GestioneDipendentibtn = new JButton("Gestione Dipendenti");
+		iconaGestioneDipendenti = new ImageIcon(
+				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaGestioneDipendentibtn.png");
+		GestioneDipendentibtn = new JButton("Gestione Dipendenti");
+		GestioneDipendentibtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		GestioneDipendentibtn.setIcon(iconaGestioneDipendenti);
 		GestioneDipendentibtn.setBounds(0, 304, 189, 60);
 		contentPane.add(GestioneDipendentibtn);
 		GestioneDipendentibtn.setFocusable(false);
 
-		ImageIcon immagineHome = new ImageIcon("C:\\Users\\xtony\\git\\Progetto-OO-BD-\\Progetto[OODB2021] gruppo 15 traccia 2\\immaginiGUI\\immagineHome.png");
+		immagineHome = new ImageIcon(
+				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\immaginiGUI\\immagineHome.png");
 		JLabel Homelbl = new JLabel("");
 		Homelbl.setIcon(immagineHome);
 		Homelbl.setBounds(191, 0, 510, 388);
 		contentPane.add(Homelbl);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 255, 255));
 		panel.setBounds(191, 0, 510, 417);
@@ -76,7 +91,10 @@ public class HomeGUI extends JFrame {
 
 		GestioneDipendentibtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				theController.apriDipendentiGUI();
 			}
 		});
+		
 	}
+
 }

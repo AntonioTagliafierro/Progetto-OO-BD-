@@ -22,6 +22,19 @@ public class Residenza {
 		this.nCivico = nCivico;
 		this.dipendente = dipendente;
 	}
+	
+
+	public Residenza(String città, String provincia) {
+		super();
+		this.città = città;
+		this.provincia = provincia;
+	}
+
+
+	public Residenza() {
+	
+	}
+
 
 	// Getter e Setter
 	public String getCittà() {

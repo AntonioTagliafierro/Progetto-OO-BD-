@@ -10,7 +10,7 @@ public class MeetingTelematico {
 	private String nomeMeetingTelematico;
 	private LocalDate dataMeetingTelematico;
 	private LocalTime oraInizioMeetingTelematico;
-	private int durataMeetingTelematico;
+	private LocalTime oraFineMeetingTelematico;
 	private String descrizioneMeetingTelematico;
 	private PiattaformaMeeting piattaforma;
 	private ArrayList<Dipendente> partecipantiMeetingTelematico;
@@ -32,26 +32,26 @@ public class MeetingTelematico {
 	}
 
 	public MeetingTelematico(String nomeMeetingTelematico, LocalDate dataMeetingTelematico,
-			LocalTime oraInizioMeetingTelematico, int durataMeetingTelematico, String descrizioneMeetingTelematico,
+			LocalTime oraInizioMeetingTelematico, LocalTime oraFineMeetingTelematico, String descrizioneMeetingTelematico,
 			PiattaformaMeeting piattaforma) {
 		super();
 		this.nomeMeetingTelematico = nomeMeetingTelematico;
 		this.dataMeetingTelematico = dataMeetingTelematico;
 		this.oraInizioMeetingTelematico = oraInizioMeetingTelematico;
-		this.durataMeetingTelematico = durataMeetingTelematico;
+		this.oraFineMeetingTelematico = oraFineMeetingTelematico;
 		this.descrizioneMeetingTelematico = descrizioneMeetingTelematico;
 		this.piattaforma = piattaforma;
 	}
 
 	public MeetingTelematico(String codMeetingTelematico, String nomeMeetingTelematico, LocalDate dataMeetingTelematico,
-			LocalTime oraInizioMeetingTelematico, int durataMeetingTelematico, String descrizioneMeetingTelematico,
+			LocalTime oraInizioMeetingTelematico, LocalTime oraFineMeetingTelematico, String descrizioneMeetingTelematico,
 			PiattaformaMeeting piattaforma, ArrayList<Dipendente> partecipantiMeetingTelematico) {
 		super();
 		this.codMeetingTelematico = codMeetingTelematico;
 		this.nomeMeetingTelematico = nomeMeetingTelematico;
 		this.dataMeetingTelematico = dataMeetingTelematico;
 		this.oraInizioMeetingTelematico = oraInizioMeetingTelematico;
-		this.durataMeetingTelematico = durataMeetingTelematico;
+		this.oraFineMeetingTelematico = oraFineMeetingTelematico;
 		this.descrizioneMeetingTelematico = descrizioneMeetingTelematico;
 		this.piattaforma = piattaforma;
 		this.partecipantiMeetingTelematico = new ArrayList<Dipendente>();
@@ -91,12 +91,12 @@ public class MeetingTelematico {
 		this.oraInizioMeetingTelematico = oraInizioMeetingTelematico;
 	}
 
-	public int getDurataMeetingTelematico() {
-		return durataMeetingTelematico;
+	public LocalTime getOraFineMeetingTelematico() {
+		return oraFineMeetingTelematico;
 	}
 
-	public void setDurataMeetingTelematico(int durataMeetingTelematico) {
-		this.durataMeetingTelematico = durataMeetingTelematico;
+	public void setOraFineMeetingTelematico(LocalTime oraFineMeetingTelematico) {
+		this.oraFineMeetingTelematico = oraFineMeetingTelematico;
 	}
 
 	public String getDescrizioneMeetingTelematico() {

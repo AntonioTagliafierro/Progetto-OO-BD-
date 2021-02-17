@@ -15,6 +15,11 @@ public class Ambito {
 		this.progetti = new ArrayList <Progetto>();
 	}
 
+	public Ambito(String nomeAmbito) {
+		super();
+		this.nomeAmbito = nomeAmbito;
+	}
+
 	//Getter e Setter
 	public String getNomeAmbito() {
 		return nomeAmbito;

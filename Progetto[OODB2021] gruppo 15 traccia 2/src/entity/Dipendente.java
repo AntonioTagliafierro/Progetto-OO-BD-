@@ -1,7 +1,8 @@
 package entity;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Dipendente {
 
@@ -11,12 +12,13 @@ public class Dipendente {
 	private String nome;
 	private String cognome;
 	private String email;
-	private LocalDate dataNascita;
+	private String sesso;
+	private Date dataNascita;
 	private String status;
-	private int età;
-	private int valutazione;
-	private float salarioMedio;
+	private float valutazione;
+	private double salarioMedio;
 	private String pathFoto;
+	private String nCellulare;
 	private Residenza residenza;
 	private ArrayList<PartecipanteProgetto> progetti;
 	private ArrayList<MeetingFisico> meetingFisici;
@@ -28,9 +30,20 @@ public class Dipendente {
 		super();
 		this.codiceFiscale = codiceFiscale;
 	}
+	
 
-	public Dipendente(String codiceFiscale, String nome, String cognome, String status, int valutazione,
-			float salarioMedio) {
+	public Dipendente(String nome, String cognome, String sesso, Date dataNascita, Residenza residenza) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.sesso = sesso;
+		this.dataNascita = dataNascita;
+		this.residenza = residenza;
+	}
+
+
+	public Dipendente(String codiceFiscale, String nome, String cognome, String status, float valutazione,
+			double salarioMedio) {
 		super();
 		this.codiceFiscale = codiceFiscale;
 		this.nome = nome;
@@ -40,8 +53,8 @@ public class Dipendente {
 		this.salarioMedio = salarioMedio;
 	}
 
-	public Dipendente(String codiceFiscale, String nome, String cognome, String email, LocalDate dataNascita,
-			String status, int età, int valutazione, float salarioMedio, String pathFoto, Residenza residenza) {
+	public Dipendente(String codiceFiscale, String nome, String cognome, String email, Date dataNascita,
+			String status, String sesso, String nCellulare,float valutazione, double salarioMedio, String pathFoto, Residenza residenza) {
 		super();
 		this.codiceFiscale = codiceFiscale;
 		this.nome = nome;
@@ -49,7 +62,8 @@ public class Dipendente {
 		this.email = email;
 		this.dataNascita = dataNascita;
 		this.status = status;
-		this.età = età;
+		this.sesso = sesso;
+		this.nCellulare = nCellulare;
 		this.valutazione = valutazione;
 		this.salarioMedio = salarioMedio;
 		this.pathFoto = pathFoto;
@@ -64,8 +78,8 @@ public class Dipendente {
 	}
 
 	 
-	public Dipendente(String codiceFiscale, String nome, String cognome, String email, LocalDate dataNascita,
-			String status, int età, int valutazione, float salarioMedio, String pathFoto, Residenza residenza,
+	public Dipendente(String codiceFiscale, String nome, String cognome, String email, Date dataNascita,
+			String status,String sesso, float valutazione, double salarioMedio, String pathFoto, Residenza residenza,
 			ArrayList<PartecipanteProgetto> progetti, ArrayList<MeetingFisico> meetingFisici,
 			ArrayList<MeetingTelematico> meetingTelematici) {
 		super();
@@ -75,7 +89,7 @@ public class Dipendente {
 		this.email = email;
 		this.dataNascita = dataNascita;
 		this.status = status;
-		this.età = età;
+		this.sesso = sesso;
 		this.valutazione = valutazione;
 		this.salarioMedio = salarioMedio;
 		this.pathFoto = pathFoto;
@@ -85,7 +99,14 @@ public class Dipendente {
 		this.meetingTelematici = new ArrayList<MeetingTelematico>();
 	}
 
+	public Dipendente() {
+		
+	} 
+	
 	// Getter e Setter
+
+
+
 
 	public String getCodiceFiscale() {
 		return codiceFiscale;
@@ -119,11 +140,11 @@ public class Dipendente {
 		this.email = email;
 	}
 
-	public LocalDate getDataNascita() {
+	public Date getDataNascita() {
 		return dataNascita;
 	}
 
-	public void setDataNascita(LocalDate dataNascita) {
+	public void setDataNascita(Date dataNascita) {
 		this.dataNascita = dataNascita;
 	}
 
@@ -135,15 +156,15 @@ public class Dipendente {
 		this.status = status;
 	}
 
-	public int getEtà() {
-		return età;
+	public String getSesso() {
+		return sesso;
 	}
 
-	public void setEtà(int età) {
-		this.età = età;
+	public void setSesso(String sesso) {
+		this.sesso = sesso;
 	}
 
-	public int getValutazione() {
+	public float getValutazione() {
 		return valutazione;
 	}
 
@@ -151,11 +172,11 @@ public class Dipendente {
 		this.valutazione = valutazione;
 	}
 
-	public float getSalarioMedio() {
+	public double getSalarioMedio() {
 		return salarioMedio;
 	}
 
-	public void setSalarioMedio(float salarioMedio) {
+	public void setSalarioMedio(double salarioMedio) {
 		this.salarioMedio = salarioMedio;
 	}
 
@@ -197,6 +218,14 @@ public class Dipendente {
 
 	public void setMeetingTelematici(ArrayList<MeetingTelematico> meetingTelematici) {
 		this.meetingTelematici = meetingTelematici;
+	}
+
+	public String getnCellulare() {
+		return nCellulare;
+	}
+
+	public void setnCellulare(String nCellulare) {
+		this.nCellulare = nCellulare;
 	}
 
 }
