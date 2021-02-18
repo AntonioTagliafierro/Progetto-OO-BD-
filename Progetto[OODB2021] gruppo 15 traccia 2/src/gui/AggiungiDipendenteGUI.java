@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
@@ -39,7 +38,6 @@ public class AggiungiDipendenteGUI extends JFrame {
 
 	Controller theController;
 
-	private String iconaFrame;
 	private JButton fotobtn;
 	private JLabel nomelbl;
 	private JLabel cognomelbl;
@@ -74,19 +72,21 @@ public class AggiungiDipendenteGUI extends JFrame {
 	private InputStream ips2;
 	private InputStreamReader ipsr2;
 	private BufferedReader br2;
-	private String pathImage = "C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\fotoDipendenti\\fotoprofilodefault2.jpg";
+	private String pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
 	private Date data = new Date();
 	private int controllo = 0;
-
+	private JButton eliminaFotobtn;
+	private String[] foto = new String[3];
+	
+	private String fotoVecchia = "/fotoDipendenti/fotoprofilodefault2.jpg";
+	
 	/**
 	 * Create the frame.
 	 */
 	public AggiungiDipendenteGUI(Controller c) {
-
+		foto[1]="/fotoDipendenti/fotoprofilodefault2.jpg";
 		theController = c;
-		iconaFrame = new String(
-				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\icon\\iconaFrame.png");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(iconaFrame));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(HomeGUI.class.getResource("/icon/iconaFrame.png")));
 		setTitle("AggiungiDipendente");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -168,15 +168,17 @@ public class AggiungiDipendenteGUI extends JFrame {
 		fotobtn.setFocusable(false);
 		fotobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				pathImage = c.SalvaFotoDipendente();
-				fotobtn.setIcon(c.resize(new ImageIcon(pathImage), 369, 385));
+				fotoVecchia = pathImage;
+				foto = c.SalvaFotoDipendente();
+				fotobtn.setIcon(c.resize(new ImageIcon(foto[2]),
+						369, 385));
+				pathImage = foto[1];
 
 			}
 		});
 		fotobtn.setToolTipText("Inserisci Foto Dipendente");
 		fotobtn.setBounds(421, 11, 369, 385);
-		fotobtn.setIcon(c.resize(new ImageIcon(
-				"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\fotoDipendenti\\fotoprofilodefault2.jpg"),
+		fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)),
 				369, 385));
 		contentPane.add(fotobtn);
 
@@ -398,68 +400,78 @@ public class AggiungiDipendenteGUI extends JFrame {
 				}
 
 				if (controllo == 0) {
-					controllo = 0;
-					String prefissoDaDividere = prefissocb.getSelectedItem().toString();
-					String[] prefisso = prefissoDaDividere.split(" ");
-					String nazione = prefisso[0];
-					String prefissoDaSalvare = prefisso[1];
-					Residenza residenza = new Residenza();
-					residenza.setCittà(cittàtf.getText());
-					residenza.setProvincia(provinciacb.getSelectedItem().toString());
-					residenza.setCap(captf.getText());
-					residenza.setVia(viatf.getText());
-					residenza.setnCivico(nCivicotf.getText());
 
-					Dipendente dipendente = new Dipendente();
-					dipendente.setCodiceFiscale(codFtf.getText());
-					dipendente.setCognome(cognometf.getText());
-					dipendente.setNome(nometf.getText());
-					dipendente.setEmail(emailtf.getText());
-					dipendente.setSalarioMedio(Double.parseDouble(salariotf.getText()));
-					dipendente.setDataNascita(dataDiNascita.getDate());
-					if (Mrbtn.isSelected()) {
-						dipendente.setSesso("M");
-					} else if (Frbtn.isSelected()) {
-						dipendente.setSesso("F");
+					int opzione = JOptionPane.showOptionDialog(null,
+							"Vuoi salvare " + nometf.getText() + " " + cognometf.getText() + " come dipendente?",
+							"Salvataggio", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+							new Object[] { "Yes", "No" }, JOptionPane.YES_OPTION);
+					if (opzione == JOptionPane.YES_OPTION) {
+						if (!foto[1].equals(fotoVecchia)) {
+							c.SalvaNuovaFoto(foto);
+						}
+						String prefissoDaDividere = prefissocb.getSelectedItem().toString();
+						String[] prefisso = prefissoDaDividere.split(" ");
+						String nazione = prefisso[0];
+						String prefissoDaSalvare = prefisso[1];
+						Residenza residenza = new Residenza();
+						residenza.setCittà(cittàtf.getText());
+						residenza.setProvincia(provinciacb.getSelectedItem().toString());
+						residenza.setCap(captf.getText());
+						residenza.setVia(viatf.getText());
+						residenza.setnCivico(nCivicotf.getText());
+
+						Dipendente dipendente = new Dipendente();
+						dipendente.setCodiceFiscale(codFtf.getText());
+						dipendente.setCognome(cognometf.getText());
+						dipendente.setNome(nometf.getText());
+						dipendente.setEmail(emailtf.getText());
+						dipendente.setSalarioMedio(Double.parseDouble(salariotf.getText()));
+						dipendente.setDataNascita(dataDiNascita.getDate());
+						if (Mrbtn.isSelected()) {
+							dipendente.setSesso("M");
+						} else if (Frbtn.isSelected()) {
+							dipendente.setSesso("F");
+						} else {
+							dipendente.setSesso("Non Specificato");
+						}
+						dipendente.setPathFoto(pathImage);
+						dipendente.setResidenza(residenza);
+						dipendente.setnCellulare(prefissoDaSalvare + " " + cellularetf.getText());
+
+						try {
+							c.SalvaDipendente(dipendente);
+							int risposta = JOptionPane.showOptionDialog(null,
+									"Dipendente salvato! Vuoi aggiungere un altro dipendente?", "Salvato",
+									JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+									new Object[] { "Yes", "No" }, JOptionPane.YES_OPTION);
+							if (risposta == JOptionPane.YES_OPTION) {
+
+								nometf.setText("");
+								cognometf.setText("");
+								codFtf.setText("");
+								emailtf.setText("");
+								cittàtf.setText("");
+								viatf.setText("");
+								captf.setText("");
+								salariotf.setText("");
+								nCivicotf.setText("");
+								cellularetf.setText("");
+								dataDiNascita.setDate(data);
+								fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource("/fotoDipendenti/fotoprofilodefault2.jpg")),
+										369, 385));
+								pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
+
+							} else if (risposta == JOptionPane.NO_OPTION) {
+								c.TornaDipendentiGUIDaAggiungiDipendente();
+							}
+						} catch (SQLException e) {
+
+							JOptionPane.showMessageDialog(null, e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+						}
 					} else {
-						dipendente.setSesso("Non Specificato");
-					}
-					dipendente.setPathFoto(pathImage);
-					dipendente.setResidenza(residenza);
-					dipendente.setnCellulare(prefissoDaSalvare + " " + cellularetf.getText());
-
-					try {
-						c.SalvaDipendente(dipendente);
-						int risposta = JOptionPane.showOptionDialog(null,
-								"Dipendente salvato! Vuoi aggiungere un altro dipendente?", "Salvato",
-								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-								new Object[] { "Yes", "No" }, JOptionPane.YES_OPTION);
-						if (risposta == JOptionPane.YES_OPTION) {
-
-							nometf.setText("");
-							cognometf.setText("");
-							codFtf.setText("");
-							emailtf.setText("");
-							cittàtf.setText("");
-							viatf.setText("");
-							captf.setText("");
-							salariotf.setText("");
-							nCivicotf.setText("");
-							cellularetf.setText("");
-							dataDiNascita.setDate(data);
-							fotobtn.setIcon(c.resize(new ImageIcon(
-									"C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\fotoDipendenti\\fotoprofilodefault2.jpg"),
-									369, 385));
-
-						} else if (risposta == JOptionPane.NO_OPTION) {
-							c.TornaDipendentiGUIDaAggiungiDipendente();
-						} 
-					} catch (SQLException e) {
-
-						JOptionPane.showMessageDialog(null, e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+						return;
 					}
 				} else {
-
 					controllo = 0;
 					return;
 				}
@@ -469,6 +481,17 @@ public class AggiungiDipendenteGUI extends JFrame {
 		salvabtn.setToolTipText("Salva Dipendente");
 		salvabtn.setBounds(701, 411, 89, 44);
 		contentPane.add(salvabtn);
+		
+		eliminaFotobtn = new JButton("Elimina Foto");
+		eliminaFotobtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
+				fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)),
+						369, 385));;
+			}
+		});
+		eliminaFotobtn.setBounds(292, 373, 89, 23);
+		contentPane.add(eliminaFotobtn);
 
 		// caricamento combobox province
 
@@ -502,5 +525,4 @@ public class AggiungiDipendenteGUI extends JFrame {
 		}
 
 	}
-
 }

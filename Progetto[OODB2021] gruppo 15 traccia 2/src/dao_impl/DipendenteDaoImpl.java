@@ -3,7 +3,11 @@ package dao_impl;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.sun.jdi.DoubleValue;
 
 import controller.Controller;
 import daos.DipendenteDao;
@@ -17,6 +21,9 @@ public class DipendenteDaoImpl implements DipendenteDao {
 //Prepared Statement
 	private PreparedStatement inserisciDipendentePS;
 	private PreparedStatement inserisciResidenzaPS;
+	private PreparedStatement recuperaGeneralit‡PS;
+
+
 
 	public DipendenteDaoImpl(Connection connection) {
 
@@ -26,6 +33,14 @@ public class DipendenteDaoImpl implements DipendenteDao {
 			inserisciDipendentePS = connessione.prepareStatement(
 					"INSERT INTO DIPENDENTE (CODF,NOME,COGNOME,EMAIL,DATAN,SESSO,NUMCELLULARE,PATHFOTO,SALARIO) VALUES(?,?,?,?,?,?,?,?,?)");
 			inserisciResidenzaPS = connessione.prepareStatement("INSERT INTO RESIDENZA VALUES (?,?,?,?,?,?)");
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaGeneralit‡PS = connessione
+					.prepareStatement("SELECT  CODF,NOME,COGNOME,STATUS,VALUTAZIONE,SALARIO FROM DIPENDENTE");
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -48,12 +63,11 @@ public class DipendenteDaoImpl implements DipendenteDao {
 
 		inserisciDipendentePS.setString(7, dipendente.getnCellulare());
 		inserisciDipendentePS.setString(8, dipendente.getPathFoto());
-		inserisciDipendentePS.setBigDecimal( 9,BigDecimal.valueOf( dipendente.getSalarioMedio()));
+		inserisciDipendentePS.setBigDecimal(9, BigDecimal.valueOf(dipendente.getSalarioMedio()));
 
 		inserisciDipendentePS.executeUpdate();
 
-//		inserisciDipendentePS.close();
-		
+
 
 	}
 
@@ -68,8 +82,30 @@ public class DipendenteDaoImpl implements DipendenteDao {
 		inserisciResidenzaPS.setString(6, dipendente.getResidenza().getCitt‡().toUpperCase());
 		inserisciResidenzaPS.executeUpdate();
 
-//		inserisciResidenzaPS.close();
+
+
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaGeneralit‡Dipendenti() throws SQLException {
 		
+		ResultSet rs = recuperaGeneralit‡PS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+
+		while (rs.next()) {
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setStatus(rs.getString("STATUS"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
 	}
 
 }

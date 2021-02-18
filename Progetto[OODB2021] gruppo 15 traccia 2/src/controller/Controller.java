@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -56,6 +57,10 @@ public class Controller {
 	private String expRegNome = "[A-Za-z]{1,20}";
 
 	private String expRegSalario = "[0-9]+.+[0-9]{2}";
+	
+	
+	//ArrayList
+	ArrayList <Dipendente> dipendenti = new ArrayList<Dipendente>();
 
 
 	public Controller(Connection connection) {
@@ -66,10 +71,18 @@ public class Controller {
 	}
 
 	public void apriDipendentiGUI() {
-		dipendentiFrame = new DipendentiGUI(this);
+		
+		
 		home.setVisible(false);
+		dipendentiFrame = new DipendentiGUI(this);
 		dipendentiFrame.setVisible(true);
 
+	}
+
+	public ArrayList<Dipendente> RecuperaDipendenti() throws SQLException {
+		
+		return dipendenti = dipendenteDao.RecuperaGeneralit‡Dipendenti();
+		
 	}
 
 	public void ChiudiDipendentiGui() {
@@ -81,12 +94,13 @@ public class Controller {
 	public void ApriAggiungiDipendenteGui() {
 		aggiungiDipendenteFrame = new AggiungiDipendenteGUI(this);
 		aggiungiDipendenteFrame.setVisible(true);
-		dipendentiFrame.dispose();
+		dipendentiFrame.setVisible(false);;
 
 	}
 
 	public void TornaDipendentiGUIDaAggiungiDipendente() {
 		aggiungiDipendenteFrame.dispose();
+		dipendentiFrame = new DipendentiGUI(this);
 		dipendentiFrame.setVisible(true);
 
 	}
@@ -94,7 +108,8 @@ public class Controller {
 
 
 	// metodo per salvare la foto profilo di un dipendente
-	public String SalvaFotoDipendente() {
+	public String[] SalvaFotoDipendente() {
+		String[] foto = new String[3];
 		String pathImage = null;
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG, GIF, and PNG Images", "jpg", "gif", "png");
@@ -102,24 +117,36 @@ public class Controller {
 		int returnVal = chooser.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-			try {
-				File file = chooser.getSelectedFile();
-				System.out.println("You chose to open this file: " + file.getName());
-				BufferedImage image;
-				image = ImageIO.read(file);
-				String nomeFoto = (String) JOptionPane.showInputDialog("Scegli il nome con cui salvare la foto");
-				
-				String estensione=JOptionPane.showInputDialog(null,"Qual Ë l'estensione della foto?","Estensione",JOptionPane.QUESTION_MESSAGE);
-				pathImage = "C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\fotoDipendenti\\"
-						+ nomeFoto + "."+estensione;
-				ImageIO.write(image, "jpg", new File(pathImage));
-			} catch (IOException e1) {
-
-				JOptionPane.showMessageDialog(null, "Errore caricamento foto", "Errore", JOptionPane.ERROR_MESSAGE);
-			}
+			File file = chooser.getSelectedFile();
+			System.out.println("You chose to open this file: " + file.getName());
+			
+			String nomeFoto = (String) JOptionPane.showInputDialog("Scegli il nome con cui salvare la foto");
+			
+			
+			foto[0] = "C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\src\\fotoDipendenti\\"
+					+ nomeFoto + ".jpg";
+			
+			foto[1] ="/fotoDipendenti/"+nomeFoto+".jpg";
+			foto[2] = file.getAbsolutePath();
 
 		}
-		return pathImage;
+		return foto;
+	}
+	 
+	//metodo per copiare la foto solo se Ë nuova
+	public void SalvaNuovaFoto(String[] foto) {
+		
+		try {
+			File file = new File(foto[2]);
+			BufferedImage image;
+			image = ImageIO.read(file);
+			ImageIO.write(image, "jpg", new File(foto[0]));
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Errore salvataggio foto","Errore",JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	// metodo per ridimensionare L'immagine
@@ -247,7 +274,7 @@ public class Controller {
 	
 	//metodo che chiama la funzione della classe DipendenteDaoImpl  per salvare il dipendente nel DB 
 	public void SalvaDipendente(Dipendente dipendente) throws SQLException {
-		
+			
 
 			dipendenteDao.InserisciDipendente(dipendente);
 			dipendenteDao.InserisciResidenza(dipendente);
@@ -255,5 +282,7 @@ public class Controller {
 
 
 	}
+
+
 
 }
