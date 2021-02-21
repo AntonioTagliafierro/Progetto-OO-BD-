@@ -79,6 +79,9 @@ public class AggiungiDipendenteGUI extends JFrame {
 	private String[] foto = new String[3];
 	
 	private String fotoVecchia = "/fotoDipendenti/fotoprofilodefault2.jpg";
+	private JComboBox<String> provinciacb;
+	private JComboBox<String> prefissocb;
+	private JDateChooser dataDiNascita;
 	
 	/**
 	 * Create the frame.
@@ -234,7 +237,7 @@ public class AggiungiDipendenteGUI extends JFrame {
 		contentPane.add(emailtf);
 		emailtf.setColumns(10);
 
-		JComboBox<String> prefissocb = new JComboBox<String>();
+		prefissocb = new JComboBox<String>();
 		prefissocb.setBounds(127, 162, 165, 22);
 		contentPane.add(prefissocb);
 
@@ -253,7 +256,7 @@ public class AggiungiDipendenteGUI extends JFrame {
 		contentPane.add(captf);
 		captf.setColumns(10);
 
-		JComboBox<String> provinciacb = new JComboBox<String>();
+		provinciacb = new JComboBox<String>();
 		provinciacb.setBounds(127, 237, 57, 22);
 		contentPane.add(provinciacb);
 
@@ -272,7 +275,7 @@ public class AggiungiDipendenteGUI extends JFrame {
 		contentPane.add(salariotf);
 		salariotf.setColumns(10);
 
-		JDateChooser dataDiNascita = new JDateChooser();
+		dataDiNascita = new JDateChooser();
 		dataDiNascita.setBounds(127, 114, 99, 20);
 		contentPane.add(dataDiNascita);
 

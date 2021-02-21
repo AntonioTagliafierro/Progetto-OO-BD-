@@ -2,7 +2,6 @@ package controller;
 
 import gui.*;
 
-
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -18,15 +17,15 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 import dao_impl.DipendenteDaoImpl;
 import daos.DipendenteDao;
 import entity.Dipendente;
 
 public class Controller {
-
-
 //Classi GUI
 
 	// DAO
@@ -57,32 +56,30 @@ public class Controller {
 	private String expRegNome = "[A-Za-z]{1,20}";
 
 	private String expRegSalario = "[0-9]+.+[0-9]{2}";
-	
-	
-	//ArrayList
-	ArrayList <Dipendente> dipendenti = new ArrayList<Dipendente>();
 
+	private String expRegValutazioneFiltro = "[0-9]*";
+	// ArrayList
+	ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
 
 	public Controller(Connection connection) {
-		
+
 		home = new HomeGUI(this);
 		home.setVisible(true);
 		dipendenteDao = new DipendenteDaoImpl(connection);
 	}
 
 	public void apriDipendentiGUI() {
-		
-		
+
 		home.setVisible(false);
-		dipendentiFrame = new DipendentiGUI(this);
+		dipendentiFrame = new DipendentiGUI(this, null, null);
 		dipendentiFrame.setVisible(true);
 
 	}
 
 	public ArrayList<Dipendente> RecuperaDipendenti() throws SQLException {
-		
+
 		return dipendenti = dipendenteDao.RecuperaGeneralit‡Dipendenti();
-		
+
 	}
 
 	public void ChiudiDipendentiGui() {
@@ -94,18 +91,33 @@ public class Controller {
 	public void ApriAggiungiDipendenteGui() {
 		aggiungiDipendenteFrame = new AggiungiDipendenteGUI(this);
 		aggiungiDipendenteFrame.setVisible(true);
-		dipendentiFrame.setVisible(false);;
+		dipendentiFrame.setVisible(false);
+		;
 
 	}
 
 	public void TornaDipendentiGUIDaAggiungiDipendente() {
 		aggiungiDipendenteFrame.dispose();
-		dipendentiFrame = new DipendentiGUI(this);
+		dipendentiFrame = new DipendentiGUI(this, null, null);
 		dipendentiFrame.setVisible(true);
 
 	}
 
-
+	public void riempiTable(DefaultTableModel model, ArrayList<Dipendente> dipendenti) {
+		model.setRowCount(0);
+		for (Dipendente d : dipendenti) {
+			Object[] column = { "Codice Fiscale", "Cognome", "Nome", "Status", "Valutazione", "Salario" };
+			Object[] row = new Object[6];
+			model.setColumnIdentifiers(column);
+			row[0] = d.getCodiceFiscale();
+			row[1] = d.getCognome();
+			row[2] = d.getNome();
+			row[3] = d.getStatus();
+			row[4] = d.getValutazione();
+			row[5] = d.getSalarioMedio();
+			model.addRow(row);
+		}
+	}
 
 	// metodo per salvare la foto profilo di un dipendente
 	public String[] SalvaFotoDipendente() {
@@ -119,34 +131,32 @@ public class Controller {
 
 			File file = chooser.getSelectedFile();
 			System.out.println("You chose to open this file: " + file.getName());
-			
+
 			String nomeFoto = (String) JOptionPane.showInputDialog("Scegli il nome con cui salvare la foto");
-			
-			
+
 			foto[0] = "C:\\Users\\xtony\\eclipse-workspace\\Progetto[OODB2021] gruppo 15 traccia 2\\src\\fotoDipendenti\\"
 					+ nomeFoto + ".jpg";
-			
-			foto[1] ="/fotoDipendenti/"+nomeFoto+".jpg";
+
+			foto[1] = "/fotoDipendenti/" + nomeFoto + ".jpg";
 			foto[2] = file.getAbsolutePath();
 
 		}
 		return foto;
 	}
-	 
-	//metodo per copiare la foto solo se Ë nuova
+
+	// metodo per copiare la foto solo se Ë nuova
 	public void SalvaNuovaFoto(String[] foto) {
-		
+
 		try {
 			File file = new File(foto[2]);
 			BufferedImage image;
 			image = ImageIO.read(file);
 			ImageIO.write(image, "jpg", new File(foto[0]));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Errore salvataggio foto","Errore",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Errore salvataggio foto", "Errore", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	// metodo per ridimensionare L'immagine
@@ -234,7 +244,7 @@ public class Controller {
 
 	// metodo per controllare se una stringa Ë vuota
 	public boolean ControlloStringaVuota(String valore) {
-		if (valore.isBlank()) {
+		if (valore.isEmpty()) {
 			return true;
 		} else {
 			return false;
@@ -271,18 +281,128 @@ public class Controller {
 			return false;
 		}
 	}
-	
-	//metodo che chiama la funzione della classe DipendenteDaoImpl  per salvare il dipendente nel DB 
+
+	public boolean ControlloValutazione(String valutazione) {
+		if (Pattern.matches(expRegValutazioneFiltro, valutazione)) {
+			return true;
+		} else {
+
+			return false;
+		}
+	}
+
+	// metodo che chiama la funzione della classe DipendenteDaoImpl per salvare il
+	// dipendente nel DB
 	public void SalvaDipendente(Dipendente dipendente) throws SQLException {
-			
 
-			dipendenteDao.InserisciDipendente(dipendente);
-			dipendenteDao.InserisciResidenza(dipendente);
-
-
+		dipendenteDao.InserisciDipendente(dipendente);
+		dipendenteDao.InserisciResidenza(dipendente);
 
 	}
 
+	public void EliminaDipendente(String codiceFiscale) throws SQLException {
+		dipendenteDao.eliminaDipendente(codiceFiscale);
+	}
 
+	public void DisattivaDipendente(String codiceFiscale) throws SQLException {
 
+		dipendenteDao.DisattivaDipendente(codiceFiscale);
+
+	}
+
+	public ArrayList<Dipendente> RecuperaDipendentiFiltrati(String status, String salarioS, String valutazioneS) {
+
+		if ((status.equals("ATTIVO") || status.equals("NON ATTIVO"))) {
+
+			if (this.ControlloStringaVuota(salarioS)) {
+
+				if (this.ControlloStringaVuota(valutazioneS)) {
+
+					try {
+						dipendenti = dipendenteDao.RecuperaDipendentiStatus(status);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return dipendenti;
+				} else {
+					try {
+						float valutazione = Float.parseFloat(valutazioneS);
+						dipendenti = dipendenteDao.RecuperaDipendentiStatuseValutazione(status, valutazione);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return dipendenti;
+				}
+			} else {
+				if (this.ControlloStringaVuota(valutazioneS)) {
+					try {
+						double salario = Double.valueOf(salarioS);
+						dipendenti = dipendenteDao.RecuperaDipendentiStatuseSalario(status, salario);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						double salario = Double.valueOf(salarioS);
+						float valutazione = Float.parseFloat(valutazioneS);
+						dipendenti = dipendenteDao.RecuperaDipendentiStatusSalarioeValutazione(status, salario,
+								valutazione);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} else {
+			if (this.ControlloStringaVuota(salarioS)) {
+				if (this.ControlloStringaVuota(valutazioneS)) {
+					try {
+						dipendenti = dipendenteDao.RecuperaGeneralit‡Dipendenti();
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						float valutazione = Float.parseFloat(valutazioneS);
+						dipendenti = dipendenteDao.RecuperaDipendentiValutazione(valutazione);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} else {
+				if (this.ControlloStringaVuota(valutazioneS)) {
+					try {
+						double salario = Double.valueOf(salarioS);
+						dipendenti = dipendenteDao.RecuperaDipendentiSalario(salario);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						double salario = Double.valueOf(salarioS);
+						float valutazione = Float.parseFloat(valutazioneS);
+						dipendenti = dipendenteDao.RecuperaDipendentiSalarioeValutazione(salario, valutazione);
+						return dipendenti;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return dipendenti;
+	}
 }
