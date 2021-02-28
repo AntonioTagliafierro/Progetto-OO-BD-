@@ -23,6 +23,7 @@ public class Dipendente {
 	private ArrayList<PartecipanteProgetto> progetti;
 	private ArrayList<MeetingFisico> meetingFisici;
 	private ArrayList<MeetingTelematico> meetingTelematici;
+	private ArrayList<ProgettiDelDipendente> progettiDipendente;
 
 	// Costruttori
 
@@ -168,7 +169,7 @@ public class Dipendente {
 		return valutazione;
 	}
 
-	public void setValutazione(int valutazione) {
+	public void setValutazione(float valutazione) {
 		this.valutazione = valutazione;
 	}
 
@@ -226,6 +227,16 @@ public class Dipendente {
 
 	public void setnCellulare(String nCellulare) {
 		this.nCellulare = nCellulare;
+	}
+
+
+	public ArrayList<ProgettiDelDipendente> getProgettiDipendente() {
+		return progettiDipendente;
+	}
+
+
+	public void setProgettiDipendente(ArrayList<ProgettiDelDipendente> progettiDipendente) {
+		this.progettiDipendente = progettiDipendente;
 	}
 
 }

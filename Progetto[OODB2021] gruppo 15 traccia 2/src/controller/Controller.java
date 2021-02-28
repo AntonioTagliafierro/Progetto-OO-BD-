@@ -36,6 +36,7 @@ public class Controller {
 	private HomeGUI home;
 	private DipendentiGUI dipendentiFrame;
 	private AggiungiDipendenteGUI aggiungiDipendenteFrame;
+	private VisualizzaModificaDipendenteGUI visualizzaModificaDipendenteFrame;
 //espressioni regolari
 	private String expRegCAP = "[0-9]{5}";
 
@@ -58,6 +59,8 @@ public class Controller {
 	private String expRegSalario = "[0-9]+.+[0-9]{2}";
 
 	private String expRegValutazioneFiltro = "[0-9]*";
+	
+	Dipendente dipendente = new Dipendente();
 	// ArrayList
 	ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
 
@@ -71,7 +74,7 @@ public class Controller {
 	public void apriDipendentiGUI() {
 
 		home.setVisible(false);
-		dipendentiFrame = new DipendentiGUI(this, null, null);
+		dipendentiFrame = new DipendentiGUI(this);
 		dipendentiFrame.setVisible(true);
 
 	}
@@ -98,12 +101,35 @@ public class Controller {
 
 	public void TornaDipendentiGUIDaAggiungiDipendente() {
 		aggiungiDipendenteFrame.dispose();
-		dipendentiFrame = new DipendentiGUI(this, null, null);
+		dipendentiFrame = new DipendentiGUI(this);
 		dipendentiFrame.setVisible(true);
 
 	}
+	public void ApriVisualizzaModificaDipendenteGUI(String codiceFiscale) {
+		dipendente = this.RecuperaTuttoDipendente(codiceFiscale);
+		visualizzaModificaDipendenteFrame = new VisualizzaModificaDipendenteGUI(this, dipendente);
+		visualizzaModificaDipendenteFrame.setVisible(true);
+		dipendentiFrame.setVisible(false);
+		
+	}
+	public void TornaDipendentiGUIDaVisualizzaModificaDipendente() {
+		visualizzaModificaDipendenteFrame.setVisible(false);
+		dipendentiFrame.setVisible(true);
+		
+	}
 
-	public void riempiTable(DefaultTableModel model, ArrayList<Dipendente> dipendenti) {
+	private Dipendente RecuperaTuttoDipendente(String codiceFiscale) {
+		try {
+			return dipendente = dipendenteDao.RecuperaTuttoDaDipendente(codiceFiscale);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dipendente;
+		
+	}
+
+	public void riempiTableDipendenti(DefaultTableModel model, ArrayList<Dipendente> dipendenti) {
 		model.setRowCount(0);
 		for (Dipendente d : dipendenti) {
 			Object[] column = { "Codice Fiscale", "Cognome", "Nome", "Status", "Valutazione", "Salario" };
@@ -299,6 +325,10 @@ public class Controller {
 		dipendenteDao.InserisciResidenza(dipendente);
 
 	}
+	public void AggiornaDipendente(Dipendente dipendente,String vecchioCF) throws SQLException {
+		
+		dipendenteDao.aggiornaDipendente(dipendente,vecchioCF);
+	}
 
 	public void EliminaDipendente(String codiceFiscale) throws SQLException {
 		dipendenteDao.eliminaDipendente(codiceFiscale);
@@ -405,4 +435,8 @@ public class Controller {
 		}
 		return dipendenti;
 	}
+
+
+
+
 }

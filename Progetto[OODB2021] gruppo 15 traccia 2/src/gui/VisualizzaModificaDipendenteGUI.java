@@ -4,10 +4,18 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import controller.Controller;
 import entity.Dipendente;
+import entity.MeetingFisico;
+import entity.MeetingTelematico;
+import entity.ProgettiDelDipendente;
 import entity.Residenza;
 
 import javax.swing.JLabel;
@@ -31,8 +39,10 @@ import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
-public class AggiungiDipendenteGUI extends JFrame {
+public class VisualizzaModificaDipendenteGUI extends JFrame {
 
 	private JPanel contentPane;
 
@@ -72,28 +82,46 @@ public class AggiungiDipendenteGUI extends JFrame {
 	private InputStream ips2;
 	private InputStreamReader ipsr2;
 	private BufferedReader br2;
-	private String pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
+	private String pathImage;
 	private Date data = new Date();
 	private int controllo = 0;
-	private JButton eliminaFotobtn;
+	private JButton fotoPrecedentebtn;
 	private String[] foto = new String[3];
-	
-	private String fotoVecchia = "/fotoDipendenti/fotoprofilodefault2.jpg";
+	private String vecchioCF;
+
+	private String fotoVecchia;
 	private JComboBox<String> provinciacb;
 	private JComboBox<String> prefissocb;
 	private JDateChooser dataDiNascita;
-	
+	private Dipendente dipendente;
+	private JButton modificabtn;
+	private JLabel valutazionelbl;
+	private JButton rimuoviFotobtn;
+	private JButton tornaIndietrobtn;
+	private JTable progettiTable;
+	private JTable meetingTable;
+	private DefaultTableModel model;
+
+	private TableColumnModel colonne;
+
+	private TableModel righe;
+	private JScrollPane progettiscrollPane;
+	private JScrollPane meetingscrollPane;
+
 	/**
 	 * Create the frame.
 	 */
-	public AggiungiDipendenteGUI(Controller c) {
-		foto[1]="/fotoDipendenti/fotoprofilodefault2.jpg";
+	public VisualizzaModificaDipendenteGUI(Controller c, Dipendente dipendenteDaVisualizzare) {
+		this.dipendente = dipendenteDaVisualizzare;
+		foto[1] = dipendente.getPathFoto();
+		pathImage = dipendente.getPathFoto();
+		fotoVecchia = dipendente.getPathFoto();
 		theController = c;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HomeGUI.class.getResource("/icon/iconaFrame.png")));
-		setTitle("AggiungiDipendente");
+		setTitle("VisualizzaModificaDipendente");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 816, 491);
+		setBounds(100, 100, 1051, 675);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -163,7 +191,7 @@ public class AggiungiDipendenteGUI extends JFrame {
 
 		salariolbl = new JLabel("Salario");
 		salariolbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		salariolbl.setBounds(10, 335, 46, 14);
+		salariolbl.setBounds(10, 314, 46, 14);
 		contentPane.add(salariolbl);
 
 		fotobtn = new JButton("");
@@ -173,43 +201,48 @@ public class AggiungiDipendenteGUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				fotoVecchia = pathImage;
 				foto = c.SalvaFotoDipendente();
-				fotobtn.setIcon(c.resize(new ImageIcon(foto[2]),
-						369, 385));
+				fotobtn.setIcon(c.resize(new ImageIcon(foto[2]), 369, 385));
 				pathImage = foto[1];
 
 			}
 		});
 		fotobtn.setToolTipText("Inserisci Foto Dipendente");
 		fotobtn.setBounds(421, 11, 369, 385);
-		fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)),
-				369, 385));
+		fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)), 369, 385));
 		contentPane.add(fotobtn);
 
-		JButton tornaIndietrobtn = new JButton("Indietro");
+		tornaIndietrobtn = new JButton("Indietro");
 		tornaIndietrobtn.setFocusable(false);
 		tornaIndietrobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				c.TornaDipendentiGUIDaAggiungiDipendente();
+				c.TornaDipendentiGUIDaVisualizzaModificaDipendente();
 			}
 		});
 		tornaIndietrobtn.setToolTipText("Torna Indietro");
-		tornaIndietrobtn.setBounds(10, 411, 89, 44);
+		tornaIndietrobtn.setBounds(10, 581, 89, 44);
 		contentPane.add(tornaIndietrobtn);
 
 		nometf = new JTextField();
 		nometf.setBounds(127, 15, 154, 20);
 		contentPane.add(nometf);
 		nometf.setColumns(10);
+		nometf.setText(dipendente.getNome());
+		nometf.setEnabled(false);
 
 		cognometf = new JTextField();
 		cognometf.setBounds(127, 37, 154, 20);
 		contentPane.add(cognometf);
 		cognometf.setColumns(10);
+		cognometf.setText(dipendente.getCognome());
+		cognometf.setEnabled(false);
 
 		codFtf = new JTextField();
 		codFtf.setBounds(127, 63, 126, 20);
 		contentPane.add(codFtf);
 		codFtf.setColumns(10);
+		codFtf.setText(dipendente.getCodiceFiscale());
+		codFtf.setEnabled(false);
+		vecchioCF = codFtf.getText();
 
 		Mrbtn = new JRadioButton("M");
 		Mrbtn.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -230,59 +263,82 @@ public class AggiungiDipendenteGUI extends JFrame {
 		sesso.add(Frbtn);
 		sesso.add(Mrbtn);
 		sesso.add(nonSpecificarerbtn);
-		nonSpecificarerbtn.setSelected(true);
+		if (dipendente.getSesso().equals("M")) {
+			Mrbtn.setSelected(true);
+		} else if (dipendente.getSesso().equals("F")) {
+			Frbtn.setSelected(true);
+		} else {
+			nonSpecificarerbtn.setSelected(true);
+		}
+		Mrbtn.setEnabled(false);
+		Frbtn.setEnabled(false);
+		nonSpecificarerbtn.setEnabled(false);
 
 		emailtf = new JTextField();
 		emailtf.setBounds(127, 138, 284, 20);
 		contentPane.add(emailtf);
 		emailtf.setColumns(10);
-
-		prefissocb = new JComboBox<String>();
-		prefissocb.setBounds(127, 162, 165, 22);
-		contentPane.add(prefissocb);
+		emailtf.setText(dipendente.getEmail());
+		emailtf.setEnabled(false);
 
 		cellularetf = new JTextField();
-		cellularetf.setBounds(290, 163, 121, 20);
+		cellularetf.setBounds(127, 163, 121, 20);
 		contentPane.add(cellularetf);
 		cellularetf.setColumns(10);
+		cellularetf.setText(dipendente.getnCellulare());
+		cellularetf.setEnabled(false);
 
 		cittàtf = new JTextField();
 		cittàtf.setBounds(127, 188, 190, 20);
 		contentPane.add(cittàtf);
 		cittàtf.setColumns(10);
+		cittàtf.setText(dipendente.getResidenza().getCittà());
+		cittàtf.setEnabled(false);
 
 		captf = new JTextField();
 		captf.setBounds(127, 213, 99, 20);
 		contentPane.add(captf);
 		captf.setColumns(10);
+		captf.setText(dipendente.getResidenza().getCap());
+		captf.setEnabled(false);
 
 		provinciacb = new JComboBox<String>();
 		provinciacb.setBounds(127, 237, 57, 22);
 		contentPane.add(provinciacb);
+		provinciacb.setSelectedItem(dipendente.getResidenza().getProvincia());
+		provinciacb.setEnabled(false);
 
 		viatf = new JTextField();
 		viatf.setBounds(127, 263, 190, 20);
 		contentPane.add(viatf);
 		viatf.setColumns(10);
+		viatf.setText(dipendente.getResidenza().getVia());
+		viatf.setEnabled(false);
 
 		nCivicotf = new JTextField();
 		nCivicotf.setBounds(127, 288, 86, 20);
 		contentPane.add(nCivicotf);
 		nCivicotf.setColumns(10);
+		nCivicotf.setText(dipendente.getResidenza().getnCivico());
+		nCivicotf.setEnabled(false);
 
 		salariotf = new JTextField();
-		salariotf.setBounds(127, 334, 86, 20);
+		salariotf.setBounds(127, 313, 86, 20);
 		contentPane.add(salariotf);
 		salariotf.setColumns(10);
+		salariotf.setText(String.valueOf(dipendente.getSalarioMedio()));
+		salariotf.setEnabled(false);
 
 		dataDiNascita = new JDateChooser();
 		dataDiNascita.setBounds(127, 114, 99, 20);
 		contentPane.add(dataDiNascita);
 
-		dataDiNascita.setDate(data);
+		dataDiNascita.setDate(dipendente.getDataNascita());
+		dataDiNascita.setEnabled(false);
 
 		JButton salvabtn = new JButton("Salva");
 		salvabtn.setFocusable(false);
+		salvabtn.setVisible(false);
 		salvabtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -405,17 +461,13 @@ public class AggiungiDipendenteGUI extends JFrame {
 				if (controllo == 0) {
 
 					int opzione = JOptionPane.showOptionDialog(null,
-							"Vuoi salvare " + nometf.getText() + " " + cognometf.getText() + " come dipendente?",
+							"Vuoi aggiornare " + nometf.getText() + " " + cognometf.getText() + " come dipendente?",
 							"Salvataggio", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 							new Object[] { "Yes", "No" }, JOptionPane.YES_OPTION);
 					if (opzione == JOptionPane.YES_OPTION) {
 						if (!foto[1].equals(fotoVecchia)) {
 							c.SalvaNuovaFoto(foto);
 						}
-						String prefissoDaDividere = prefissocb.getSelectedItem().toString();
-						String[] prefisso = prefissoDaDividere.split(" ");
-						String nazione = prefisso[0];
-						String prefissoDaSalvare = prefisso[1];
 						Residenza residenza = new Residenza();
 						residenza.setCittà(cittàtf.getText());
 						residenza.setProvincia(provinciacb.getSelectedItem().toString());
@@ -439,30 +491,54 @@ public class AggiungiDipendenteGUI extends JFrame {
 						}
 						dipendente.setPathFoto(pathImage);
 						dipendente.setResidenza(residenza);
-						dipendente.setnCellulare(prefissoDaSalvare + " " + cellularetf.getText());
+						dipendente.setnCellulare(cellularetf.getText());
 
 						try {
-							c.SalvaDipendente(dipendente);
-							int risposta = JOptionPane.showOptionDialog(null,
-									"Dipendente salvato! Vuoi aggiungere un altro dipendente?", "Salvato",
-									JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+							c.AggiornaDipendente(dipendente, vecchioCF);
+							int risposta = JOptionPane.showOptionDialog(null, "Dipendente Aggiornato! Vuoi fare altro?",
+									"Salvato", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 									new Object[] { "Yes", "No" }, JOptionPane.YES_OPTION);
 							if (risposta == JOptionPane.YES_OPTION) {
 
-								nometf.setText("");
-								cognometf.setText("");
-								codFtf.setText("");
-								emailtf.setText("");
-								cittàtf.setText("");
-								viatf.setText("");
-								captf.setText("");
-								salariotf.setText("");
-								nCivicotf.setText("");
-								cellularetf.setText("");
-								dataDiNascita.setDate(data);
-								fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource("/fotoDipendenti/fotoprofilodefault2.jpg")),
-										369, 385));
-								pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
+								nometf.setText(dipendente.getNome());
+								nometf.setEnabled(false);
+								cognometf.setText(dipendente.getCognome());
+								cognometf.setEnabled(false);
+								codFtf.setText(dipendente.getCodiceFiscale());
+								codFtf.setEnabled(false);
+								emailtf.setText(dipendente.getEmail());
+								emailtf.setEnabled(false);
+								cittàtf.setText(dipendente.getResidenza().getCittà());
+								cittàtf.setEnabled(false);
+								viatf.setText(dipendente.getResidenza().getVia());
+								viatf.setEnabled(false);
+								captf.setText(dipendente.getResidenza().getCap());
+								captf.setEnabled(false);
+								salariotf.setText(String.valueOf(dipendente.getSalarioMedio()));
+								salariotf.setEnabled(false);
+								nCivicotf.setText(dipendente.getResidenza().getnCivico());
+								nCivicotf.setEnabled(false);
+								cellularetf.setText(dipendente.getnCellulare());
+								cellularetf.setEnabled(false);
+								dataDiNascita.setDate(dipendente.getDataNascita());
+								dataDiNascita.setEnabled(false);
+								fotobtn.setIcon(c.resize(
+										new ImageIcon(HomeGUI.class.getResource(dipendente.getPathFoto())), 369, 385));
+								pathImage = dipendente.getPathFoto();
+								provinciacb.setSelectedItem(dipendente.getResidenza().getProvincia());
+								provinciacb.setEnabled(false);
+								if (dipendente.getSesso().equals("M")) {
+									Mrbtn.setSelected(true);
+								} else if (dipendente.getSesso().equals("F")) {
+									Frbtn.setSelected(true);
+								} else {
+									nonSpecificarerbtn.setSelected(true);
+								}
+								Mrbtn.setEnabled(false);
+								Frbtn.setEnabled(false);
+								nonSpecificarerbtn.setEnabled(false);
+								salvabtn.setVisible(false);
+								rimuoviFotobtn.setVisible(false);
 
 							} else if (risposta == JOptionPane.NO_OPTION) {
 								c.TornaDipendentiGUIDaAggiungiDipendente();
@@ -482,20 +558,137 @@ public class AggiungiDipendenteGUI extends JFrame {
 			}
 		});
 		salvabtn.setToolTipText("Salva Dipendente");
-		salvabtn.setBounds(701, 411, 89, 44);
+		salvabtn.setBounds(936, 581, 89, 44);
 		contentPane.add(salvabtn);
-		
-		eliminaFotobtn = new JButton("Elimina Foto");
-		eliminaFotobtn.addActionListener(new ActionListener() {
+
+		fotoPrecedentebtn = new JButton("Foto Precedente");
+		fotoPrecedentebtn.setFocusable(false);
+		fotoPrecedentebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
-				fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)),
-						369, 385));;
+				pathImage = dipendente.getPathFoto();
+				fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)), 369, 385));
+
 			}
 		});
-		eliminaFotobtn.setBounds(292, 373, 111, 23);
-		contentPane.add(eliminaFotobtn);
+		fotoPrecedentebtn.setBounds(835, 137, 126, 23);
+		fotoPrecedentebtn.setVisible(false);
+		contentPane.add(fotoPrecedentebtn);
 
+		modificabtn = new JButton("Modifica");
+		modificabtn.setFocusable(false);
+		modificabtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				salvabtn.setVisible(true);
+				fotoPrecedentebtn.setVisible(true);
+				Mrbtn.setEnabled(true);
+				Frbtn.setEnabled(true);
+				nonSpecificarerbtn.setEnabled(true);
+				nometf.setEnabled(true);
+				cognometf.setEnabled(true);
+				codFtf.setEnabled(true);
+				emailtf.setEnabled(true);
+				dataDiNascita.setEnabled(true);
+				cellularetf.setEnabled(true);
+				cittàtf.setEnabled(true);
+				captf.setEnabled(true);
+				viatf.setEnabled(true);
+				nCivicotf.setEnabled(true);
+				salariotf.setEnabled(true);
+				provinciacb.setEnabled(true);
+				rimuoviFotobtn.setVisible(true);
+
+			}
+		});
+		modificabtn.setBounds(837, 581, 89, 44);
+		contentPane.add(modificabtn);
+
+		valutazionelbl = new JLabel("Valutazione");
+		valutazionelbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		valutazionelbl.setBounds(10, 339, 89, 27);
+		contentPane.add(valutazionelbl);
+
+		JLabel valoreValutazionelbl = new JLabel(String.valueOf(dipendente.getValutazione()));
+		valoreValutazionelbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		valoreValutazionelbl.setBounds(127, 341, 86, 25);
+		contentPane.add(valoreValutazionelbl);
+
+		rimuoviFotobtn = new JButton("Rimuovi Foto");
+		rimuoviFotobtn.setFocusable(false);
+		rimuoviFotobtn.setVisible(false);
+		rimuoviFotobtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
+				fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)), 369, 385));
+			}
+		});
+		rimuoviFotobtn.setBounds(835, 87, 126, 23);
+		contentPane.add(rimuoviFotobtn);
+
+		progettiscrollPane = new JScrollPane();
+		progettiscrollPane.setBounds(10, 456, 492, 120);
+		contentPane.add(progettiscrollPane);
+
+		progettiTable = new JTable();
+		progettiscrollPane.setViewportView(progettiTable);
+		model = new DefaultTableModel();
+		progettiTable.setModel(model);
+		progettiTable.getTableHeader().setReorderingAllowed(false);
+		model.setRowCount(0);
+
+		if (dipendente.getProgettiDipendente().size() != 0) {
+			for (ProgettiDelDipendente p : dipendente.getProgettiDipendente()) {
+				Object[] column = { "Nome Progetto", "Tipologia", "Ruolo" };
+				Object[] row = new Object[3];
+				model.setColumnIdentifiers(column);
+				row[0] = p.getNomeProgetto();
+				row[1] = p.getTipologia();
+				row[2] = p.getRuolo();
+
+				model.addRow(row);
+			}
+		} else {
+			Object[] column = { "Nome Progetto", "Tipologia", "Ruolo" };
+			Object[] row = new Object[3];
+			model.setColumnIdentifiers(column);
+
+		}
+
+		meetingscrollPane = new JScrollPane();
+		meetingscrollPane.setBounds(523, 456, 502, 120);
+		contentPane.add(meetingscrollPane);
+
+		meetingTable = new JTable();
+		meetingscrollPane.setViewportView(meetingTable);
+		model = new DefaultTableModel();
+		meetingTable.setModel(model);
+		meetingTable.getTableHeader().setReorderingAllowed(false);
+		if (dipendente.getMeetingFisici().size() != 0) {
+			for (MeetingFisico mf : dipendente.getMeetingFisici()) {
+				Object[] column = { "Codice", "Tipo", "Data", "Luogo" };
+				Object[] row = new Object[4];
+				model.setColumnIdentifiers(column);
+				row[0] = mf.getCodMeetingFisico();
+				row[1] = "Fisico";
+				row[2] = mf.getDataMeetingFisico();
+				row[3] = mf.getSala().getNomeSala();
+
+				model.addRow(row);
+			}
+		} else {
+			Object[] column = { "Codice", "Tipo", "Data", "Luogo" };
+			Object[] row = new Object[4];
+			model.setColumnIdentifiers(column);
+
+		}
+		for (MeetingTelematico mt : dipendente.getMeetingTelematici()) {
+			Object[] row = new Object[4];
+			row[0] = mt.getCodMeetingTelematico();
+			row[1] = "Telematico";
+			row[2] = mt.getDataMeetingTelematico();
+			row[3] = mt.getPiattaforma().getNomePiattaforma();
+
+			model.addRow(row);
+		}
 		// caricamento combobox province
 
 		try {
@@ -507,21 +700,6 @@ public class AggiungiDipendenteGUI extends JFrame {
 				provinciacb.addItem(provincia);
 			}
 			br.close();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Errore caricamento file province", "Errore",
-					JOptionPane.ERROR_MESSAGE);
-		}
-
-		// caricamento prefissi
-		try {
-			ips2 = new FileInputStream("Prefissi.txt");
-			ipsr2 = new InputStreamReader(ips2);
-			br2 = new BufferedReader(ipsr2);
-			String provincia;
-			while ((provincia = br2.readLine()) != null) {
-				prefissocb.addItem(provincia);
-			}
-			br2.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Errore caricamento file province", "Errore",
 					JOptionPane.ERROR_MESSAGE);

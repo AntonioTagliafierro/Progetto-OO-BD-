@@ -21,5 +21,7 @@ public interface DipendenteDao {
 		public ArrayList<Dipendente> RecuperaDipendentiStatusSalarioeValutazione(String status, Double salario, Float valutazione) throws SQLException;
 
 		public ArrayList<Dipendente> RecuperaDipendentiSalarioeValutazione(Double salario, Float valutazione) throws SQLException;
+		public Dipendente RecuperaTuttoDaDipendente(String codiceFiscale) throws SQLException;
+		public void aggiornaDipendente(Dipendente dipendente,String vecchioCF) throws SQLException;
 
 }

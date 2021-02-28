@@ -10,12 +10,18 @@ public class PiattaformaMeeting {
 	
 	//Costruttore
 	
+	
 	public PiattaformaMeeting(String nomePiattaforma, int limitePartecipanti) {
 		super();
 		this.nomePiattaforma = nomePiattaforma;
 		this.limitePartecipanti = limitePartecipanti;
 	}
 	
+
+	public PiattaformaMeeting() {
+		super();
+	}
+
 
 	public PiattaformaMeeting(String nomePiattaforma, int limitePartecipanti,
 			ArrayList<MeetingTelematico> meetingTelematici) {

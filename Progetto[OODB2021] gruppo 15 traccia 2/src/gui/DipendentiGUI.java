@@ -8,8 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.sun.jdi.DoubleValue;
-
 import controller.Controller;
 import entity.Dipendente;
 
@@ -22,19 +20,13 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JSlider;
-import java.awt.Component;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
-import javax.swing.JFormattedTextField;
 
 public class DipendentiGUI extends JFrame {
 
@@ -57,6 +49,11 @@ public class DipendentiGUI extends JFrame {
 	private JButton cancellabtn;
 	private JTextField salariotf;
 	private JTextField valutazionetf;
+	private JButton visualizzabtn;
+
+	private TableColumnModel colonne = null;
+
+	private TableModel righe = null;
 
 	/**
 	 * Create the frame.
@@ -65,7 +62,7 @@ public class DipendentiGUI extends JFrame {
 	 * @throws SQLException
 	 */
 
-	public DipendentiGUI(Controller c, TableModel righe, TableColumnModel colonne) {
+	public DipendentiGUI(Controller c) {
 		theController = c;
 
 		try {
@@ -191,7 +188,7 @@ public class DipendentiGUI extends JFrame {
 		mostraDipendentiTable.getCellSelectionEnabled();
 
 		mostraDipendentiTable.getTableHeader().setReorderingAllowed(false);
-		c.riempiTable(model, dipendenti);
+		c.riempiTableDipendenti(model, dipendenti);
 
 		filtriPanel = new JPanel();
 		filtriPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -236,7 +233,7 @@ public class DipendentiGUI extends JFrame {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				c.riempiTable(model, dipendenti);
+				c.riempiTableDipendenti(model, dipendenti);
 
 			}
 		});
@@ -275,7 +272,7 @@ public class DipendentiGUI extends JFrame {
 				
 				this.dipendenti = c.RecuperaDipendentiFiltrati(statuscb.getSelectedItem().toString(),
 						salariotf.getText(), valutazionetf.getText());
-				c.riempiTable(model, dipendenti);
+				c.riempiTableDipendenti(model, dipendenti);
 			}
 		});
 		cercabtn.setFocusable(false);
@@ -291,5 +288,24 @@ public class DipendentiGUI extends JFrame {
 		valutazionetf.setBounds(471, 20, 86, 20);
 		filtriPanel.add(valutazionetf);
 		valutazionetf.setColumns(10);
+		
+		visualizzabtn = new JButton("Visualizza");
+		visualizzabtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int i = mostraDipendentiTable.getSelectedRow();
+				if (i >= 0) {
+					String codiceFiscale = mostraDipendentiTable.getValueAt(i, 0).toString();
+					c.ApriVisualizzaModificaDipendenteGUI(codiceFiscale);
+
+				} else {
+					JOptionPane.showMessageDialog(null, "Nessun dipendente selezionato", "Errore",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		visualizzabtn.setFocusable(false);
+		visualizzabtn.setBounds(340, 0, 89, 69);
+		contentPane.add(visualizzabtn);
 	}
 }

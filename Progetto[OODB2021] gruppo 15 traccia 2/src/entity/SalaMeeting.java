@@ -16,6 +16,10 @@ public class SalaMeeting {
 		this.nPosti = nPosti;
 	}
 
+	public SalaMeeting() {
+		super();
+	}
+
 	public SalaMeeting(String nomeSala, int nPosti, ArrayList<MeetingFisico> meetingFisici) {
 		super();
 		this.nomeSala = nomeSala;
