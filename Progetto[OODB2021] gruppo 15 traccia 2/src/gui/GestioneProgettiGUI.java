@@ -22,9 +22,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+
 import javax.swing.UIManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -37,6 +41,7 @@ import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.SwingConstants;
 
 public class GestioneProgettiGUI extends JFrame {
 
@@ -60,12 +65,26 @@ public class GestioneProgettiGUI extends JFrame {
 	private ImageIcon iconaCerca_btm;
 	private ImageIcon iconaElimina_btm;
 	private ImageIcon iconaDettagli_btm;
+	private ImageIcon iconaCancellaFiltri_btm;
+	private JButton CancellaFiltri_btm;
+	private ImageIcon iconaCercaFiltri_btm;
 
 	public GestioneProgettiGUI(Controller c, TableModel righe) {
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				
+					
+						c.ChiudiGestioneProgetti();
+					
+				} 
+			
+		});
 		setBackground(SystemColor.desktop);
 
 		theController = c;
-		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GestioneProgettiGUI.class.getResource("/icon/iconaFrame.png")));
 		try {
 			this.progetti = c.RecuperaProgetto();
 		} catch (SQLException e) {
@@ -74,8 +93,8 @@ public class GestioneProgettiGUI extends JFrame {
 		}
 		
 		setTitle("Gestione Progetti");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 731, 519);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 671, 484);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(0, 0, 128));
 		contentPane.setBackground(new Color(0, 0, 128));
@@ -91,7 +110,7 @@ public class GestioneProgettiGUI extends JFrame {
 				Indietro_btm.setToolTipText("Torna alla pagina precedente");
 			}
 		});
-		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Indietro_btm.setBackground(UIManager.getColor("Button.background"));
 		Indietro_btm.setFocusable(false);
 		iconaIndietro_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaIndietrobtm.png.png")));
@@ -113,7 +132,7 @@ public class GestioneProgettiGUI extends JFrame {
 				Aggiungi_btm.setToolTipText("Crea un nuovo progetto");
 			}
 		});
-		Aggiungi_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Aggiungi_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Aggiungi_btm.setBackground(UIManager.getColor("Button.background"));
 		Aggiungi_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -140,7 +159,7 @@ public class GestioneProgettiGUI extends JFrame {
 				Cerca_btm.setToolTipText("Filtra i progetti ");
 			}
 		});
-		Cerca_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Cerca_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
 		Cerca_btm.setBackground(UIManager.getColor("Button.background"));
 		iconaCerca_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCercaProgettibtn.png")));
@@ -196,7 +215,7 @@ public class GestioneProgettiGUI extends JFrame {
 			}
 		});
 				
-		Elimina_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Elimina_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Elimina_btm.setBackground(UIManager.getColor("Button.background"));
 		iconaElimina_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCancellaProgettibtn.png")));
 		Elimina_btm.setIcon(iconaElimina_btm);
@@ -205,8 +224,9 @@ public class GestioneProgettiGUI extends JFrame {
 		Elimina_btm.setFocusable(false);
 		
 		scrollPane = new JScrollPane();
+		scrollPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		scrollPane.setFocusable(false);
-		scrollPane.setBounds(42, 196, 611, 184);
+		scrollPane.setBounds(10, 222, 635, 184);
 		contentPane.add(scrollPane);
 		
 		
@@ -215,13 +235,14 @@ public class GestioneProgettiGUI extends JFrame {
 				return false;
 			}
 		};
+		MostraProgetti_JT.setBorder(new LineBorder(new Color(0, 0, 0)));
 		scrollPane.setViewportView(MostraProgetti_JT);
 		model = new DefaultTableModel();
 		MostraProgetti_JT.setModel(model);
 		
 		Filtri_JP = new JPanel();
 		Filtri_JP.setVisible(false);
-		Filtri_JP.setBounds(42, 69, 556, 99);
+		Filtri_JP.setBounds(46, 97, 556, 99);
 		contentPane.add(Filtri_JP);
 		Filtri_JP.setLayout(null);
 		
@@ -249,6 +270,10 @@ public class GestioneProgettiGUI extends JFrame {
 		Tipologia_TF.setColumns(10);
 		
 		JButton Cancellafiltri_btm = new JButton("Cerca");
+		Cancellafiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
+		iconaCercaFiltri_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCercaProgettobtm.png.png")));
+		Cancellafiltri_btm.setIcon(iconaCercaFiltri_btm);
+		Cancellafiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Cancellafiltri_btm.setFocusable(false);
 		Cancellafiltri_btm.addActionListener(new ActionListener() {
 			private ArrayList<Progetto> progetti;
@@ -272,10 +297,14 @@ public class GestioneProgettiGUI extends JFrame {
 						c.riempiTableProgetti(model, progetti);
 			}
 		});
-		Cancellafiltri_btm.setBounds(457, 65, 89, 23);
+		Cancellafiltri_btm.setBounds(457, 59, 89, 29);
 		Filtri_JP.add(Cancellafiltri_btm);
 		
-		JButton CancellaFiltri_btm = new JButton("Cancella");
+		CancellaFiltri_btm = new JButton("Cancella");
+		CancellaFiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
+		iconaCancellaFiltri_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+		CancellaFiltri_btm.setIcon(iconaCancellaFiltri_btm);
+		CancellaFiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CancellaFiltri_btm.addActionListener(new ActionListener() {
 			private ArrayList<Progetto> progetti;
 			public void actionPerformed(ActionEvent e) {
@@ -292,12 +321,12 @@ public class GestioneProgettiGUI extends JFrame {
 			}
 		});
 		CancellaFiltri_btm.setFocusable(false);
-		CancellaFiltri_btm.setBounds(367, 65, 89, 23);
+		CancellaFiltri_btm.setBounds(367, 59, 89, 29);
 		Filtri_JP.add(CancellaFiltri_btm);
 		
 		Dettagli_btn = new JButton("");
 		Dettagli_btn.setToolTipText("Modifica un progetto");
-		Dettagli_btn.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Dettagli_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Dettagli_btn.setFocusable(false);
 		iconaDettagli_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaModificaProgettibtn.png")));
 		Dettagli_btn.setIcon(iconaDettagli_btm);
