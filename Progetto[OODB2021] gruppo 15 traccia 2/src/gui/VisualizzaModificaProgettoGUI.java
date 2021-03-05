@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -36,6 +37,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class VisualizzaModificaProgettoGUI extends JFrame {
 
@@ -102,8 +105,25 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 	private ImageIcon iconaAggiungiPartecipante_btm;
 	private ArrayList<Dipendente> dipendenti;
 	private JButton Completa_btn;
+	private ImageIcon iconaCompleta_btm;
+	private ImageIcon iconaCancellaDipendente_btm;
 
 	public VisualizzaModificaProgettoGUI(Controller c, Progetto progettoDaVisualizzare) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				
+				if (Salva_btm.isVisible()) {
+					int a = JOptionPane.showConfirmDialog(null, "Attenzione, se confermi perderai i dati inseriti",
+							"Attenzione", JOptionPane.WARNING_MESSAGE);
+					if (a == 0) {
+						c.TornaHomeGUIDaModificaProgetto();
+					}
+				} else {
+					c.TornaHomeGUIDaModificaProgetto();
+				}
+			}
+		});
 
 		try {
 			this.dipendenteDaAggiungere = c.RecuperaDipendentiSenzaFiltri();
@@ -112,6 +132,8 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 			e.printStackTrace();
 		}
 
+		setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaFrame.png")));
 		this.progetto = progettoDaVisualizzare;
 		String codp = progettoDaVisualizzare.getCodProgetto();
 
@@ -122,9 +144,10 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		dipendenteDaEliminare = new ArrayList<PartecipanteProgetto>();
 		theController = c;
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 902, 678);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 1005, 749);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 0, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -148,20 +171,22 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		Indietro_btm.setIcon(iconaIndietro_btm);
 		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Indietro_btm.setFocusable(false);
-		Indietro_btm.setBounds(0, 0, 43, 23);
+		Indietro_btm.setBounds(10, 643, 124, 39);
 		contentPane.add(Indietro_btm);
 
 		Nome_JL = new JLabel("Nome");
+		Nome_JL.setForeground(Color.LIGHT_GRAY);
 		Nome_JL.setToolTipText("");
 		Nome_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Nome_JL.setBounds(10, 34, 64, 37);
+		Nome_JL.setBounds(10, 11, 64, 37);
 		contentPane.add(Nome_JL);
 		Nome_JL.setToolTipText(null);
 
 		Tipologia_JL = new JLabel("Tipologia");
+		Tipologia_JL.setForeground(Color.LIGHT_GRAY);
 		Tipologia_JL.setToolTipText("");
 		Tipologia_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Tipologia_JL.setBounds(10, 68, 64, 37);
+		Tipologia_JL.setBounds(10, 45, 64, 37);
 		contentPane.add(Tipologia_JL);
 		Tipologia_JL.setToolTipText(null);
 
@@ -171,14 +196,15 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		Tipologia_TF.setText(progetto.getTipologiaProgetto());
 		Tipologia_TF.setToolTipText("Inserisci la tipologia del progetto.");
 		Tipologia_TF.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		Tipologia_TF.setBounds(132, 76, 86, 20);
+		Tipologia_TF.setBounds(132, 53, 86, 20);
 		contentPane.add(Tipologia_TF);
 		Tipologia_TF.setColumns(10);
 
 		Ambiti_JL = new JLabel("Ambiti");
+		Ambiti_JL.setForeground(Color.LIGHT_GRAY);
 		Ambiti_JL.setToolTipText("");
 		Ambiti_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Ambiti_JL.setBounds(10, 210, 46, 14);
+		Ambiti_JL.setBounds(344, 22, 46, 14);
 		contentPane.add(Ambiti_JL);
 		Ambiti_JL.setToolTipText(null);
 
@@ -186,7 +212,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		Ambiti_TF.setBorder(new LineBorder(new Color(0, 0, 0)));
 		Ambiti_TF.setEditable(false);
 		Ambiti_TF.setToolTipText("Inserisci gli ambiti del progetto.");
-		Ambiti_TF.setBounds(132, 209, 86, 20);
+		Ambiti_TF.setBounds(426, 24, 86, 23);
 		contentPane.add(Ambiti_TF);
 		Ambiti_TF.setColumns(10);
 
@@ -221,11 +247,13 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 				if (ambitiDaEliminare != null) {
 					int dim = ambitiDaEliminare.size();
 					if (dim != 0) {
-						for (Ambito a : ambitiDaEliminare) {
-							if (a.getNomeAmbito().equals(ambitoAggiunto)) {
-								ambitiDaEliminare.remove(a);
+						for (Iterator<Ambito> a = ambitiDaEliminare.iterator(); a.hasNext();) {
+							Ambito amb = a.next();
+							if (amb.getNomeAmbito().equals(ambito.getNomeAmbito())) {
+								a.remove();
 							}
 						}
+
 					}
 				}
 
@@ -237,27 +265,29 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		AggiungiAmbiti_btn.setIcon(iconaAggiungiAmbito_btm);
 		AggiungiAmbiti_btn.setToolTipText("Aggiungi ambito");
 		AggiungiAmbiti_btn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		AggiungiAmbiti_btn.setBounds(228, 210, 25, 23);
+		AggiungiAmbiti_btn.setBounds(515, 24, 25, 23);
 		contentPane.add(AggiungiAmbiti_btn);
 		AggiungiAmbiti_btn.setFocusable(false);
 
 		DataInizio_JL = new JLabel("Data Inizio");
+		DataInizio_JL.setForeground(Color.LIGHT_GRAY);
 		DataInizio_JL.setToolTipText("");
 		DataInizio_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		DataInizio_JL.setBounds(10, 116, 77, 14);
+		DataInizio_JL.setBounds(10, 93, 77, 14);
 		contentPane.add(DataInizio_JL);
 		DataInizio_JL.setToolTipText("Inserisci la data di inizio del progetto");
 
 		DataScadenza_JL = new JLabel("Data Scadenza");
+		DataScadenza_JL.setForeground(Color.LIGHT_GRAY);
 		DataScadenza_JL.setToolTipText("Inserisci la data di scadenza del progetto.");
 		DataScadenza_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		DataScadenza_JL.setBounds(10, 144, 103, 14);
+		DataScadenza_JL.setBounds(10, 121, 103, 14);
 		contentPane.add(DataScadenza_JL);
 
 		ScegliData_JC = new JDateChooser();
 		ScegliData_JC.setBorder(new LineBorder(new Color(0, 0, 0)));
 		ScegliData_JC.getCalendarButton().setEnabled(false);
-		ScegliData_JC.setBounds(132, 117, 108, 20);
+		ScegliData_JC.setBounds(132, 94, 108, 20);
 		contentPane.add(ScegliData_JC);
 		ScegliData_JC.setDate(progetto.getDataInizioProgetto());
 		ScegliData_JC.setEnabled(false);
@@ -266,14 +296,15 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		DataScadenza_JC.setBorder(new LineBorder(new Color(0, 0, 0)));
 		DataScadenza_JC.getCalendarButton().setEnabled(false);
 		DataScadenza_JC.setDate(progetto.getDataScadenzaProgetto());
-		DataScadenza_JC.setBounds(132, 144, 108, 20);
+		DataScadenza_JC.setBounds(132, 121, 108, 20);
 		contentPane.add(DataScadenza_JC);
 		DataScadenza_JC.setEnabled(false);
 
 		NomeCliente_JL = new JLabel("Nome Cliente");
+		NomeCliente_JL.setForeground(Color.LIGHT_GRAY);
 		NomeCliente_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		NomeCliente_JL.setToolTipText("");
-		NomeCliente_JL.setBounds(10, 179, 86, 14);
+		NomeCliente_JL.setBounds(10, 156, 86, 14);
 		contentPane.add(NomeCliente_JL);
 		NomeCliente_JL.setToolTipText(null);
 
@@ -282,14 +313,15 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		NomeCliente_TF.setEditable(false);
 		NomeCliente_TF.setText(progetto.getNomeCliente());
 		NomeCliente_TF.setToolTipText("Inserisci il nome di chi ha commissionato il progetto.");
-		NomeCliente_TF.setBounds(132, 178, 86, 20);
+		NomeCliente_TF.setBounds(132, 155, 86, 20);
 		contentPane.add(NomeCliente_TF);
 		NomeCliente_TF.setColumns(10);
 
 		Descrizione_JL = new JLabel("Descrizione");
+		Descrizione_JL.setForeground(Color.LIGHT_GRAY);
 		Descrizione_JL.setToolTipText("");
 		Descrizione_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Descrizione_JL.setBounds(284, 45, 92, 14);
+		Descrizione_JL.setBounds(658, 11, 92, 14);
 		contentPane.add(Descrizione_JL);
 		Descrizione_JL.setToolTipText(null);
 
@@ -298,7 +330,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		Nome_TF.setEditable(false);
 		Nome_TF.setText(progetto.getNomeProgetto());
 		Nome_TF.setToolTipText("Inserisci il nome del progetto.");
-		Nome_TF.setBounds(132, 44, 86, 20);
+		Nome_TF.setBounds(132, 21, 86, 20);
 		contentPane.add(Nome_TF);
 		Nome_TF.setColumns(10);
 
@@ -466,12 +498,12 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		Salva_btm.setFocusable(false);
 		iconaSalva_btm = new ImageIcon((VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaSalvataggio.png")));
 		Salva_btm.setIcon(iconaSalva_btm);
-		Salva_btm.setBounds(719, 576, 123, 37);
+		Salva_btm.setBounds(823, 643, 124, 39);
 		contentPane.add(Salva_btm);
 
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBorder(new LineBorder(Color.BLACK));
-		scrollPane_1.setBounds(10, 251, 120, 123);
+		scrollPane_1.setBounds(426, 45, 141, 123);
 		contentPane.add(scrollPane_1);
 
 		Ambiti_Table = new JTable(righe, colonne) {
@@ -491,7 +523,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		// riempimento tabella
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(387, 45, 353, 132);
+		scrollPane.setBounds(658, 38, 289, 132);
 		contentPane.add(scrollPane);
 
 		Descrizione_JTP = new JTextArea();
@@ -501,21 +533,24 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		scrollPane.setViewportView(Descrizione_JTP);
 
 		TipologiaPartecipante_JL = new JLabel("Tipologia");
+		TipologiaPartecipante_JL.setForeground(Color.LIGHT_GRAY);
 		TipologiaPartecipante_JL.setVisible(false);
 		TipologiaPartecipante_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		TipologiaPartecipante_JL.setBounds(216, 291, 65, 20);
+		TipologiaPartecipante_JL.setBounds(599, 282, 65, 20);
 		contentPane.add(TipologiaPartecipante_JL);
 
 		ValutazionePartecipante_JL = new JLabel("Valutazione");
+		ValutazionePartecipante_JL.setForeground(Color.LIGHT_GRAY);
 		ValutazionePartecipante_JL.setVisible(false);
 		ValutazionePartecipante_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		ValutazionePartecipante_JL.setBounds(216, 384, 80, 14);
+		ValutazionePartecipante_JL.setBounds(599, 375, 80, 14);
 		contentPane.add(ValutazionePartecipante_JL);
 
 		SalarioPartecipante_JL = new JLabel("Salario");
+		SalarioPartecipante_JL.setForeground(Color.LIGHT_GRAY);
 		SalarioPartecipante_JL.setVisible(false);
 		SalarioPartecipante_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		SalarioPartecipante_JL.setBounds(216, 340, 65, 14);
+		SalarioPartecipante_JL.setBounds(599, 331, 65, 14);
 		contentPane.add(SalarioPartecipante_JL);
 
 		CercaPartecipante_btm = new JButton("Cerca");
@@ -581,7 +616,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		CercaPartecipante_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CercaPartecipante_btm.setToolTipText("Cerca partecipante");
 		CercaPartecipante_btm.setFocusable(false);
-		CercaPartecipante_btm.setBounds(449, 240, 124, 39);
+		CercaPartecipante_btm.setBounds(198, 241, 124, 39);
 		contentPane.add(CercaPartecipante_btm);
 		iconaCercaPartecipante_btm = new ImageIcon(
 				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCercaProgettobtm.png.png")));
@@ -612,7 +647,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 
 		CancellaFiltri_btm.setToolTipText("Cancella i filtri");
 		CancellaFiltri_btm.setFocusable(false);
-		CancellaFiltri_btm.setBounds(596, 240, 124, 39);
+		CancellaFiltri_btm.setBounds(320, 241, 124, 39);
 		contentPane.add(CancellaFiltri_btm);
 		iconaCancellaFiltri_btm = new ImageIcon(
 				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
@@ -622,26 +657,26 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		TipologiaPartecipante_TF.setBorder(new LineBorder(new Color(0, 0, 0)));
 		TipologiaPartecipante_TF.setVisible(false);
 		TipologiaPartecipante_TF.setColumns(10);
-		TipologiaPartecipante_TF.setBounds(323, 293, 86, 20);
+		TipologiaPartecipante_TF.setBounds(706, 284, 86, 20);
 		contentPane.add(TipologiaPartecipante_TF);
 
 		SalarioPartecipante_TF = new JTextField();
 		SalarioPartecipante_TF.setBorder(new LineBorder(new Color(0, 0, 0)));
 		SalarioPartecipante_TF.setVisible(false);
 		SalarioPartecipante_TF.setColumns(10);
-		SalarioPartecipante_TF.setBounds(323, 339, 86, 20);
+		SalarioPartecipante_TF.setBounds(706, 330, 86, 20);
 		contentPane.add(SalarioPartecipante_TF);
 
 		ValutazionePartecipante_TF = new JTextField();
 		ValutazionePartecipante_TF.setBorder(new LineBorder(new Color(0, 0, 0)));
 		ValutazionePartecipante_TF.setVisible(false);
 		ValutazionePartecipante_TF.setColumns(10);
-		ValutazionePartecipante_TF.setBounds(323, 383, 86, 20);
+		ValutazionePartecipante_TF.setBounds(706, 374, 86, 20);
 		contentPane.add(ValutazionePartecipante_TF);
 
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBorder(new LineBorder(Color.BLACK));
-		scrollPane_2.setBounds(470, 295, 345, 146);
+		scrollPane_2.setBounds(10, 282, 557, 146);
 		contentPane.add(scrollPane_2);
 		scrollPane_2.setVisible(false);
 
@@ -694,15 +729,16 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 				AggiungiPartecipante_btn.setVisible(true);
 				RimuoviPartecipante_btn.setVisible(true);
 				ElencoDipendenti_JT.setVisible(true);
+				Completa_btn.setVisible(true);
 
 			}
 		});
-		Modifica_btm.setBounds(571, 576, 123, 37);
+		Modifica_btm.setBounds(700, 643, 124, 39);
 		contentPane.add(Modifica_btm);
 
 		scrollPane_3 = new JScrollPane();
 		scrollPane_3.setBorder(new LineBorder(Color.BLACK));
-		scrollPane_3.setBounds(30, 453, 419, 160);
+		scrollPane_3.setBounds(10, 486, 557, 146);
 		contentPane.add(scrollPane_3);
 
 		PartecipantiProgetto_JT = new JTable(righe, colonne) {
@@ -739,10 +775,12 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 						int dim = ambitiDaAggiungere.size();
 
 						if (dim != 0) {
-							for (Ambito a : ambitiDaAggiungere) {
-								if (a.getNomeAmbito().equals(ambitoEliminato)) {
-									ambitiDaAggiungere.remove(a);
+							for (Iterator<Ambito> a = ambitiDaAggiungere.iterator(); a.hasNext();) {
+								Ambito amb = a.next();
+								if (amb.getNomeAmbito().equals(ambito.getNomeAmbito())) {
+									a.remove();
 								}
+
 							}
 						}
 					}
@@ -755,7 +793,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 
 			}
 		});
-		RimuoviAmbito_btm.setBounds(260, 210, 25, 23);
+		RimuoviAmbito_btm.setBounds(542, 25, 25, 23);
 		contentPane.add(RimuoviAmbito_btm);
 
 		AggiungiPartecipante_btn = new JButton("Aggiungi");
@@ -778,7 +816,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 						return;
 					}
 					String ruolo = ruoloP.toUpperCase();
-					
+
 					dipendente.setCodiceFiscale(ElencoDipendenti_JT.getValueAt(i, 0).toString());
 					dipendente.setNome(ElencoDipendenti_JT.getValueAt(i, 1).toString());
 					dipendente.setCognome(ElencoDipendenti_JT.getValueAt(i, 2).toString());
@@ -819,11 +857,13 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 					if (dipendenteDaEliminare != null) {
 						int dim = dipendenteDaEliminare.size();
 						if (dim != 0) {
-							for (PartecipanteProgetto p : dipendenteDaEliminare) {
-								if (p.getDipendente().getCodiceFiscale().equals(dipendente.getCodiceFiscale())) {
-									dipendenteDaEliminare.remove(p);
+							for (Iterator<PartecipanteProgetto> p = dipendenteDaEliminare.iterator(); p.hasNext();) {
+								PartecipanteProgetto par = p.next();
+								if (par.getDipendente().getCodiceFiscale().equals(dipendente.getCodiceFiscale())) {
+									p.remove();
 								}
 							}
+
 						}
 					}
 
@@ -841,10 +881,14 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaAggiungiPartecipante.png")));
 		AggiungiPartecipante_btn.setIcon(iconaAggiungiPartecipante_btm);
 		AggiungiPartecipante_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		AggiungiPartecipante_btn.setBounds(726, 248, 89, 23);
+		AggiungiPartecipante_btn.setBounds(443, 241, 124, 39);
 		contentPane.add(AggiungiPartecipante_btn);
 
 		RimuoviPartecipante_btn = new JButton("Rimuovi");
+		iconaCancellaDipendente_btm = new ImageIcon(
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+		RimuoviPartecipante_btn.setIcon(iconaCancellaDipendente_btm);
+		RimuoviPartecipante_btn.setHorizontalTextPosition(SwingConstants.LEFT);
 		RimuoviPartecipante_btn.setFocusable(false);
 		RimuoviPartecipante_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -898,10 +942,15 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		});
 		RimuoviPartecipante_btn.setVisible(false);
 		RimuoviPartecipante_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		RimuoviPartecipante_btn.setBounds(470, 477, 89, 23);
+		RimuoviPartecipante_btn.setBounds(320, 446, 124, 39);
 		contentPane.add(RimuoviPartecipante_btn);
 
 		Completa_btn = new JButton("Completa");
+		Completa_btn.setHorizontalTextPosition(SwingConstants.LEFT);
+		Completa_btn.setToolTipText("Imposta il progetto come completato");
+		Completa_btn.setVisible(false);
+		iconaCompleta_btm = new ImageIcon((VisualizzaModificaProgettoGUI.class.getResource("/icon/checked.png")));
+		Completa_btn.setIcon(iconaCompleta_btm);
 		Completa_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -912,8 +961,8 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 							JOptionPane.YES_OPTION);
 
 					if (opzione == JOptionPane.YES_OPTION) {
-					JOptionPane.showMessageDialog(null, "Progetto completato con successo", "Completato",
-							JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Progetto completato con successo", "Completato",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -924,7 +973,7 @@ public class VisualizzaModificaProgettoGUI extends JFrame {
 		});
 		Completa_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Completa_btn.setFocusable(false);
-		Completa_btn.setBounds(596, 477, 89, 23);
+		Completa_btn.setBounds(443, 446, 124, 39);
 		contentPane.add(Completa_btn);
 		PartecipantiProgetto_JT.getTableHeader().setReorderingAllowed(false);
 		c.RiempiTablePartecipanti(modelPartecipanti, progetto.getPartecipantiProgetto());

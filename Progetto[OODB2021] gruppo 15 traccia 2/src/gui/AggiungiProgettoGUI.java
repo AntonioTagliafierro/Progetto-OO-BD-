@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +31,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JTextField;
 import com.toedter.calendar.JDayChooser;
 import com.toedter.calendar.JCalendar;
@@ -102,8 +106,22 @@ public class AggiungiProgettoGUI extends JFrame {
 	private JButton RimuoviAmbito_btm;
 	private ImageIcon iconaCancellaAmbiti_btm;
 	private JButton RimuoviPartecipante_btn;
+	private ImageIcon iconaSvuotaAmbiti_btm;
+	private ImageIcon iconaRimuoviPartecipante_btm;
 
 	public AggiungiProgettoGUI(Controller c) {
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+				int a = JOptionPane.showConfirmDialog(null, "Attenzione, se confermi perderai i dati inseriti",
+						"Attenzione", JOptionPane.WARNING_MESSAGE);
+				if (a == 0) {
+					c.ChiudiAggiungiProgettoSenzaDialog();
+				}
+			}
+		});
 
 		try {
 			this.dipendenti = c.RecuperaDipendentiSenzaFiltri();
@@ -112,13 +130,15 @@ public class AggiungiProgettoGUI extends JFrame {
 			e.printStackTrace();
 		}
 
+		setIconImage(
+				Toolkit.getDefaultToolkit().getImage(AggiungiProgettoGUI.class.getResource("/icon/iconaFrame.png")));
 		theController = c;
 		setTitle("Aggiungi progetto");
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 955, 737);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 982, 705);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBackground(new Color(0, 0, 128));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -138,48 +158,54 @@ public class AggiungiProgettoGUI extends JFrame {
 		});
 		ImageIcon iconaIndietro_btm = new ImageIcon(
 				"C:\\Users\\Gianpietro\\Desktop\\GP\\Uni\\imm\\iconaIndietrobtm.png");
-		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Indietro_btm.setFocusable(false);
-		Indietro_btm.setBounds(0, 0, 43, 23);
+		Indietro_btm.setBounds(10, 617, 103, 37);
 		contentPane.add(Indietro_btm);
 
 		Nome_JL = new JLabel("Nome");
+		Nome_JL.setForeground(Color.LIGHT_GRAY);
+		Nome_JL.setBackground(Color.BLACK);
 		Nome_JL.setToolTipText("");
 		Nome_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Nome_JL.setBounds(10, 34, 64, 37);
+		Nome_JL.setBounds(10, 6, 64, 37);
 		contentPane.add(Nome_JL);
 		Nome_JL.setToolTipText(null);
 
 		Tipologia_JL = new JLabel("Tipologia");
+		Tipologia_JL.setForeground(Color.LIGHT_GRAY);
 		Tipologia_JL.setToolTipText("");
 		Tipologia_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Tipologia_JL.setBounds(10, 68, 64, 37);
+		Tipologia_JL.setBounds(10, 40, 64, 37);
 		contentPane.add(Tipologia_JL);
 		Tipologia_JL.setToolTipText(null);
 
 		Tipologia_TF = new JTextField();
+		Tipologia_TF.setBorder(new LineBorder(Color.BLACK));
 		Tipologia_TF.setToolTipText("Inserisci la tipologia del progetto.");
 		Tipologia_TF.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		Tipologia_TF.setBounds(132, 76, 86, 20);
+		Tipologia_TF.setBounds(132, 48, 86, 20);
 		contentPane.add(Tipologia_TF);
 		Tipologia_TF.setColumns(10);
 
 		Ambiti_JL = new JLabel("Ambiti");
+		Ambiti_JL.setForeground(Color.LIGHT_GRAY);
 		Ambiti_JL.setToolTipText("");
 		Ambiti_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Ambiti_JL.setBounds(10, 210, 46, 14);
+		Ambiti_JL.setBounds(344, 22, 57, 14);
 		contentPane.add(Ambiti_JL);
 		Ambiti_JL.setToolTipText(null);
 
 		Ambiti_TF = new JTextField();
+		Ambiti_TF.setBorder(new LineBorder(Color.BLACK));
 
 		Ambiti_TF.setToolTipText("Inserisci gli ambiti del progetto.");
-		Ambiti_TF.setBounds(132, 209, 86, 20);
+		Ambiti_TF.setBounds(430, 20, 86, 23);
 		contentPane.add(Ambiti_TF);
 		Ambiti_TF.setColumns(10);
 
 		AggiungiAmbiti_btn = new JButton("");
-		AggiungiAmbiti_btn.setBorder(new LineBorder(new Color(0, 0, 0)));
+		AggiungiAmbiti_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		iconaAggiungiAmbito_btm = new ImageIcon(
 				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaAggiungiProgettobtm.png.png")));
 		AggiungiAmbiti_btn.setIcon(iconaAggiungiAmbito_btm);
@@ -209,61 +235,70 @@ public class AggiungiProgettoGUI extends JFrame {
 		});
 
 		AggiungiAmbiti_btn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		AggiungiAmbiti_btn.setBounds(224, 206, 25, 23);
+		AggiungiAmbiti_btn.setBounds(517, 20, 25, 23);
 		contentPane.add(AggiungiAmbiti_btn);
 		AggiungiAmbiti_btn.setFocusable(false);
 
 		DataInizio_JL = new JLabel("Data Inizio");
+		DataInizio_JL.setForeground(Color.LIGHT_GRAY);
 		DataInizio_JL.setToolTipText("");
 		DataInizio_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		DataInizio_JL.setBounds(10, 116, 77, 14);
+		DataInizio_JL.setBounds(10, 88, 77, 14);
 		contentPane.add(DataInizio_JL);
 		DataInizio_JL.setToolTipText("Inserisci la data di inizio del progetto");
 
 		DataScadenza_JL = new JLabel("Data Scadenza");
+		DataScadenza_JL.setForeground(Color.LIGHT_GRAY);
 		DataScadenza_JL.setToolTipText("Inserisci la data di scadenza del progetto.");
 		DataScadenza_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		DataScadenza_JL.setBounds(10, 144, 103, 14);
+		DataScadenza_JL.setBounds(10, 116, 103, 14);
 		contentPane.add(DataScadenza_JL);
 
 		ScegliData_JC = new JDateChooser();
-		ScegliData_JC.setBounds(132, 117, 108, 20);
+		ScegliData_JC.setBorder(new LineBorder(new Color(0, 0, 0)));
+		ScegliData_JC.setBounds(132, 89, 108, 20);
 		contentPane.add(ScegliData_JC);
 		ScegliData_JC.setDate(data);
 
 		DataScadenza_JC = new JDateChooser();
-		DataScadenza_JC.setBounds(132, 144, 108, 20);
+		DataScadenza_JC.setBorder(new LineBorder(new Color(0, 0, 0)));
+		DataScadenza_JC.setBounds(132, 116, 108, 20);
 		contentPane.add(DataScadenza_JC);
 		DataScadenza_JC.setDate(data);
 
 		NomeCliente_JL = new JLabel("Nome Cliente");
+		NomeCliente_JL.setForeground(Color.LIGHT_GRAY);
 		NomeCliente_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		NomeCliente_JL.setToolTipText("");
-		NomeCliente_JL.setBounds(10, 179, 86, 14);
+		NomeCliente_JL.setBounds(10, 151, 86, 14);
 		contentPane.add(NomeCliente_JL);
 		NomeCliente_JL.setToolTipText(null);
 
 		NomeCliente_TF = new JTextField();
+		NomeCliente_TF.setBorder(new LineBorder(Color.BLACK));
 		NomeCliente_TF.setToolTipText("Inserisci il nome di chi ha commissionato il progetto.");
-		NomeCliente_TF.setBounds(132, 178, 86, 20);
+		NomeCliente_TF.setBounds(132, 150, 86, 20);
 		contentPane.add(NomeCliente_TF);
 		NomeCliente_TF.setColumns(10);
 
 		Descrizione_JL = new JLabel("Descrizione");
+		Descrizione_JL.setForeground(Color.LIGHT_GRAY);
 		Descrizione_JL.setToolTipText("");
 		Descrizione_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		Descrizione_JL.setBounds(284, 45, 92, 14);
+		Descrizione_JL.setBounds(652, 17, 92, 14);
 		contentPane.add(Descrizione_JL);
 		Descrizione_JL.setToolTipText(null);
 
 		Nome_TF = new JTextField();
+		Nome_TF.setBorder(new LineBorder(Color.BLACK));
 		Nome_TF.setToolTipText("Inserisci il nome del progetto.");
-		Nome_TF.setBounds(132, 44, 86, 20);
+		Nome_TF.setBounds(132, 16, 86, 20);
 		contentPane.add(Nome_TF);
 		Nome_TF.setColumns(10);
 
 		Salva_btm = new JButton("Salva");
-		Salva_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		Salva_btm.setToolTipText("Salva il progetto");
+		Salva_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Salva_btm.setHorizontalTextPosition(SwingConstants.LEFT);
 		Salva_btm.addActionListener(new ActionListener() {
 
@@ -284,7 +319,7 @@ public class AggiungiProgettoGUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Correggi le date inserite", "Errore",
 							JOptionPane.ERROR_MESSAGE);
 					controllo++;
-					
+
 				}
 
 				if (c.controlloExpRegNome(Nome_TF.getText())) {
@@ -436,11 +471,12 @@ public class AggiungiProgettoGUI extends JFrame {
 		Salva_btm.setFocusable(false);
 		iconaSalva_btm = new ImageIcon((VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaSalvataggio.png")));
 		Salva_btm.setIcon(iconaSalva_btm);
-		Salva_btm.setBounds(797, 629, 103, 37);
+		Salva_btm.setBounds(817, 617, 124, 39);
 		contentPane.add(Salva_btm);
 
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 251, 120, 123);
+		scrollPane_1.setBorder(new LineBorder(Color.BLACK));
+		scrollPane_1.setBounds(430, 43, 137, 127);
 		contentPane.add(scrollPane_1);
 
 		Ambiti_Table = new JTable(righe, colonne) {
@@ -448,30 +484,38 @@ public class AggiungiProgettoGUI extends JFrame {
 				return false;
 			}
 		};
+		Ambiti_Table.setBorder(new LineBorder(Color.BLACK));
 		scrollPane_1.setViewportView(Ambiti_Table);
 		model2 = new DefaultTableModel();
 		Ambiti_Table.setModel(model2);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(387, 45, 353, 132);
+		scrollPane.setBounds(652, 40, 289, 127);
 		contentPane.add(scrollPane);
 
 		Descrizione_JTP = new JTextArea();
+		Descrizione_JTP.setBorder(new LineBorder(new Color(0, 0, 0)));
 		scrollPane.setViewportView(Descrizione_JTP);
 
 		TipologiaPartecipante_JL = new JLabel("Tipologia");
+		TipologiaPartecipante_JL.setVisible(false);
+		TipologiaPartecipante_JL.setForeground(Color.LIGHT_GRAY);
 		TipologiaPartecipante_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		TipologiaPartecipante_JL.setBounds(216, 291, 65, 20);
+		TipologiaPartecipante_JL.setBounds(577, 241, 65, 20);
 		contentPane.add(TipologiaPartecipante_JL);
 
 		ValutazionePartecipante_JL = new JLabel("Valutazione");
+		ValutazionePartecipante_JL.setVisible(false);
+		ValutazionePartecipante_JL.setForeground(Color.LIGHT_GRAY);
 		ValutazionePartecipante_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		ValutazionePartecipante_JL.setBounds(216, 384, 80, 14);
+		ValutazionePartecipante_JL.setBounds(577, 334, 80, 14);
 		contentPane.add(ValutazionePartecipante_JL);
 
 		SalarioPartecipante_JL = new JLabel("Salario");
+		SalarioPartecipante_JL.setVisible(false);
+		SalarioPartecipante_JL.setForeground(Color.LIGHT_GRAY);
 		SalarioPartecipante_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		SalarioPartecipante_JL.setBounds(216, 340, 65, 14);
+		SalarioPartecipante_JL.setBounds(577, 290, 65, 14);
 		contentPane.add(SalarioPartecipante_JL);
 
 		Ambiti_Table.getTableHeader().setReorderingAllowed(false);
@@ -480,13 +524,20 @@ public class AggiungiProgettoGUI extends JFrame {
 		model2.setColumnIdentifiers(column);
 
 		CercaPartecipante_btm = new JButton("Cerca");
-		CercaPartecipante_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		CercaPartecipante_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CercaPartecipante_btm.setHorizontalTextPosition(SwingConstants.LEFT);
 		iconaCercaPartecipante_btm = new ImageIcon(
 				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCercaProgettobtm.png.png")));
 		CercaPartecipante_btm.setIcon(iconaCercaPartecipante_btm);
 		CercaPartecipante_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				TipologiaPartecipante_JL.setVisible(true);
+				TipologiaPartecipante_TF.setVisible(true);
+				SalarioPartecipante_JL.setVisible(true);
+				SalarioPartecipante_TF.setVisible(true);
+				ValutazionePartecipante_JL.setVisible(true);
+				ValutazionePartecipante_TF.setVisible(true);
 
 				if (!c.ControlloStringaVuota(TipologiaPartecipante_TF.getText())) {
 
@@ -540,13 +591,13 @@ public class AggiungiProgettoGUI extends JFrame {
 		});
 		CercaPartecipante_btm.setToolTipText("");
 		CercaPartecipante_btm.setFocusable(false);
-		CercaPartecipante_btm.setBounds(467, 240, 124, 39);
+		CercaPartecipante_btm.setBounds(196, 197, 124, 39);
 		contentPane.add(CercaPartecipante_btm);
 		// ImageIcon iconaCercaPartecipante = new
 		// ImageIcon("C:\\Users\\Gianpietro\\Desktop\\GP\\Uni\\imm\\iconaCercaProgettobtm.png");
 
 		CancellaFiltri_btm = new JButton("Elimina filtri");
-		CancellaFiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		CancellaFiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CancellaFiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
 		CancellaFiltri_btm.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		iconaCancellaFiltri_btm = new ImageIcon(
@@ -554,7 +605,14 @@ public class AggiungiProgettoGUI extends JFrame {
 		CancellaFiltri_btm.setIcon(iconaCancellaFiltri_btm);
 		CancellaFiltri_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
+				TipologiaPartecipante_JL.setVisible(false);
+				TipologiaPartecipante_TF.setVisible(false);
+				SalarioPartecipante_JL.setVisible(false);
+				SalarioPartecipante_TF.setVisible(false);
+				ValutazionePartecipante_JL.setVisible(false);
+				ValutazionePartecipante_TF.setVisible(false);
+
 				TipologiaPartecipante_TF.setText("");
 				ValutazionePartecipante_TF.setText("");
 				SalarioPartecipante_TF.setText("");
@@ -571,26 +629,33 @@ public class AggiungiProgettoGUI extends JFrame {
 
 		CancellaFiltri_btm.setToolTipText("");
 		CancellaFiltri_btm.setFocusable(false);
-		CancellaFiltri_btm.setBounds(614, 240, 124, 39);
+		CancellaFiltri_btm.setBounds(319, 197, 124, 39);
 		contentPane.add(CancellaFiltri_btm);
 
 		TipologiaPartecipante_TF = new JTextField();
+		TipologiaPartecipante_TF.setVisible(false);
+		TipologiaPartecipante_TF.setBorder(new LineBorder(Color.BLACK));
 		TipologiaPartecipante_TF.setColumns(10);
-		TipologiaPartecipante_TF.setBounds(323, 293, 86, 20);
+		TipologiaPartecipante_TF.setBounds(657, 243, 86, 20);
 		contentPane.add(TipologiaPartecipante_TF);
 
 		SalarioPartecipante_TF = new JTextField();
+		SalarioPartecipante_TF.setVisible(false);
+		SalarioPartecipante_TF.setBorder(new LineBorder(Color.BLACK));
 		SalarioPartecipante_TF.setColumns(10);
-		SalarioPartecipante_TF.setBounds(323, 339, 86, 20);
+		SalarioPartecipante_TF.setBounds(657, 289, 86, 20);
 		contentPane.add(SalarioPartecipante_TF);
 
 		ValutazionePartecipante_TF = new JTextField();
+		ValutazionePartecipante_TF.setVisible(false);
+		ValutazionePartecipante_TF.setBorder(new LineBorder(Color.BLACK));
 		ValutazionePartecipante_TF.setColumns(10);
-		ValutazionePartecipante_TF.setBounds(323, 383, 86, 20);
+		ValutazionePartecipante_TF.setBounds(657, 333, 86, 20);
 		contentPane.add(ValutazionePartecipante_TF);
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(457, 295, 405, 146);
+		scrollPane_2.setBorder(new LineBorder(Color.BLACK));
+		scrollPane_2.setBounds(10, 241, 557, 146);
 		contentPane.add(scrollPane_2);
 
 		ElencoDipendenti_JT = new JTable(righe, colonne) {
@@ -598,13 +663,15 @@ public class AggiungiProgettoGUI extends JFrame {
 				return false;
 			}
 		};
+		ElencoDipendenti_JT.setBorder(new LineBorder(new Color(0, 0, 0)));
 
 		scrollPane_2.setViewportView(ElencoDipendenti_JT);
 		model = new DefaultTableModel();
 		ElencoDipendenti_JT.setModel(model);
 
 		AggiungiPartecipante_btm = new JButton("Aggiungi");
-		AggiungiPartecipante_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		AggiungiPartecipante_btm.setToolTipText("Aggiungi partecipante selezionato");
+		AggiungiPartecipante_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		AggiungiPartecipante_btm.setHorizontalTextPosition(SwingConstants.LEFT);
 		iconaAggiungiPartecipante_btm = new ImageIcon(
 				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaAggiungiPartecipante.png")));
@@ -644,8 +711,6 @@ public class AggiungiProgettoGUI extends JFrame {
 								return;
 							}
 						}
-						
-					
 
 						if (ListaPartecipantiProgetto_JT.getValueAt(n, 0).equals(dipendente.getCodiceFiscale())) {
 							JOptionPane.showMessageDialog(null, "Dipendente già inserito", "Errore",
@@ -663,11 +728,12 @@ public class AggiungiProgettoGUI extends JFrame {
 				}
 			}
 		});
-		AggiungiPartecipante_btm.setBounds(758, 240, 124, 39);
+		AggiungiPartecipante_btm.setBounds(443, 197, 124, 39);
 		contentPane.add(AggiungiPartecipante_btm);
 
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(43, 486, 517, 146);
+		scrollPane_3.setBorder(new LineBorder(Color.BLACK));
+		scrollPane_3.setBounds(10, 439, 557, 146);
 		contentPane.add(scrollPane_3);
 
 		model5 = new DefaultTableModel();
@@ -676,6 +742,7 @@ public class AggiungiProgettoGUI extends JFrame {
 				return false;
 			}
 		};
+		ListaPartecipantiProgetto_JT.setBorder(new LineBorder(new Color(0, 0, 0)));
 		scrollPane_3.setViewportView(ListaPartecipantiProgetto_JT);
 		Object[] column1 = { "Codice Fiscale", "Nome", "Cognome", "Valutazione", "Salario", "Ruolo" };
 		Object[] row = new Object[6];
@@ -683,14 +750,18 @@ public class AggiungiProgettoGUI extends JFrame {
 		ListaPartecipantiProgetto_JT.setModel(model5);
 
 		SvuotaPartecipanti_btm = new JButton("Svuota tabella");
+		SvuotaPartecipanti_btm.setHorizontalTextPosition(SwingConstants.LEFT);
+		SvuotaPartecipanti_btm.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		iconaSvuotaAmbiti_btm = new ImageIcon((VisualizzaModificaProgettoGUI.class.getResource("/icon/trash.png")));
+		SvuotaPartecipanti_btm.setIcon(iconaSvuotaAmbiti_btm);
 		SvuotaPartecipanti_btm.setFocusable(false);
-		SvuotaPartecipanti_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		SvuotaPartecipanti_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		SvuotaPartecipanti_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				model5.setRowCount(0);
 			}
 		});
-		SvuotaPartecipanti_btm.setBounds(587, 504, 108, 37);
+		SvuotaPartecipanti_btm.setBounds(353, 398, 108, 37);
 		contentPane.add(SvuotaPartecipanti_btm);
 		ListaPartecipantiProgetto_JT.getTableHeader().setReorderingAllowed(false);
 
@@ -699,9 +770,10 @@ public class AggiungiProgettoGUI extends JFrame {
 
 		RimuoviAmbito_btm = new JButton("");
 		RimuoviAmbito_btm.setFocusable(false);
-		iconaCancellaAmbiti_btm = new ImageIcon((VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+		iconaCancellaAmbiti_btm = new ImageIcon(
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
 		RimuoviAmbito_btm.setIcon(iconaCancellaAmbiti_btm);
-		RimuoviAmbito_btm.setBorder(new LineBorder(new Color(0, 0, 0)));
+		RimuoviAmbito_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		RimuoviAmbito_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int i = Ambiti_Table.getSelectedRow();
@@ -714,41 +786,43 @@ public class AggiungiProgettoGUI extends JFrame {
 
 			}
 		});
-		RimuoviAmbito_btm.setBounds(257, 206, 25, 23);
+		RimuoviAmbito_btm.setBounds(542, 20, 25, 23);
 		contentPane.add(RimuoviAmbito_btm);
-		
+
 		RimuoviPartecipante_btn = new JButton("Rimuovi");
+		RimuoviPartecipante_btn.setHorizontalTextPosition(SwingConstants.LEFT);
+		iconaRimuoviPartecipante_btm = new ImageIcon(
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+		RimuoviPartecipante_btn.setIcon(iconaRimuoviPartecipante_btm);
+		RimuoviPartecipante_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		RimuoviPartecipante_btn.setToolTipText("Rimuovi partecipante dalla tabella");
+		RimuoviPartecipante_btn.setFocusable(false);
 		RimuoviPartecipante_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				int i = ListaPartecipantiProgetto_JT.getSelectedRow();
-                if (i >= 0) {
-                    String nome = ListaPartecipantiProgetto_JT.getValueAt(i, 1).toString();
-                    String cognome = ListaPartecipantiProgetto_JT.getValueAt(i, 2).toString();
-                    int opzione = JOptionPane.showOptionDialog(null,
-                            "Vuoi rimuovere  " + cognome + " " + nome + " dal progetto?", "Rimuovi",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Yes", "No" },
-                            JOptionPane.YES_OPTION);
-                    if (opzione == JOptionPane.YES_OPTION) {
-                        
+				if (i >= 0) {
+					String nome = ListaPartecipantiProgetto_JT.getValueAt(i, 1).toString();
+					String cognome = ListaPartecipantiProgetto_JT.getValueAt(i, 2).toString();
+					int opzione = JOptionPane.showOptionDialog(null,
+							"Vuoi rimuovere  " + cognome + " " + nome + " dal progetto?", "Rimuovi",
+							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Yes", "No" },
+							JOptionPane.YES_OPTION);
+					if (opzione == JOptionPane.YES_OPTION) {
 
+						model5.removeRow(i);
 
-                    	model5.removeRow(i);
-                        
+					} else {
+						return;
+					}
 
-                    } else {
-                        return;
-                    }
-
- 
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nessun dipendente selezionato", "Errore",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+				} else {
+					JOptionPane.showMessageDialog(null, "Nessun dipendente selezionato", "Errore",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
-		RimuoviPartecipante_btn.setBounds(729, 511, 89, 23);
+		RimuoviPartecipante_btn.setBounds(459, 398, 108, 37);
 		contentPane.add(RimuoviPartecipante_btn);
 
 	}
