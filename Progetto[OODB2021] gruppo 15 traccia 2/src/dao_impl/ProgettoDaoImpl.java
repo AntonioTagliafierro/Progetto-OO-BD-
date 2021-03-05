@@ -1,4 +1,4 @@
-package daos_impl;
+package dao_impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,7 +63,7 @@ public class ProgettoDaoImpl implements ProgettoDao {
 
 		try {
 			aggiornaProgettoPS = connessione.prepareStatement(
-					"UPDATE PROGETTO SET NOMEPROGETTO = ?,  TIPOLOGIA = ? , DATAI = ? , DATAF = ?, NOMECLIENTE = ? ,DESCRIZIONE = ? ");
+					"UPDATE PROGETTO SET NOMEPROGETTO = ?,  TIPOLOGIA = ? , DATAI = ? , DATAF = ?, NOMECLIENTE = ? ,DESCRIZIONE = ?  WHERE CODP = ?");
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -320,13 +320,13 @@ public class ProgettoDaoImpl implements ProgettoDao {
 	public void InserisciProgetto(Progetto progetto, ArrayList<PartecipanteProgetto> partecipantiProgetto)
 			throws SQLException {
 
-		long time = progetto.getDataInizioProgetto().getTime();
-		long time1 = progetto.getDataScadenzaProgetto().getTime();
+		long dataInizio = progetto.getDataInizioProgetto().getTime();
+		long dataScadenza = progetto.getDataScadenzaProgetto().getTime();
 
 		inserisciProgettoPS.setString(1, progetto.getNomeProgetto().toUpperCase());
 		inserisciProgettoPS.setString(2, progetto.getTipologiaProgetto().toUpperCase());
-		inserisciProgettoPS.setDate(3, new java.sql.Date(time));
-		inserisciProgettoPS.setDate(4, new java.sql.Date(time));
+		inserisciProgettoPS.setDate(3, new java.sql.Date(dataInizio));
+		inserisciProgettoPS.setDate(4, new java.sql.Date(dataScadenza));
 		inserisciProgettoPS.setString(5, progetto.getNomeCliente().toUpperCase());
 		inserisciProgettoPS.setString(6, progetto.getDescrizioneProgetto().toUpperCase());
 		inserisciProgettoPS.executeUpdate();
@@ -364,8 +364,8 @@ public class ProgettoDaoImpl implements ProgettoDao {
 
 		int codp = Integer.parseInt(progetto.getCodProgetto());
 
-		long time = progetto.getDataInizioProgetto().getTime();
-		long time1 = progetto.getDataScadenzaProgetto().getTime();
+		long dataInizio = progetto.getDataInizioProgetto().getTime();
+		long dataScadenza = progetto.getDataScadenzaProgetto().getTime();
 
 		for (PartecipanteProgetto p : dipendenteDaEliminare) {
 
@@ -377,10 +377,11 @@ public class ProgettoDaoImpl implements ProgettoDao {
 
 		aggiornaProgettoPS.setString(1, progetto.getNomeProgetto().toUpperCase());
 		aggiornaProgettoPS.setString(2, progetto.getTipologiaProgetto().toUpperCase());
-		aggiornaProgettoPS.setDate(3, new java.sql.Date(time));
-		aggiornaProgettoPS.setDate(4, new java.sql.Date(time));
+		aggiornaProgettoPS.setDate(3, new java.sql.Date(dataInizio));
+		aggiornaProgettoPS.setDate(4, new java.sql.Date(dataScadenza));
 		aggiornaProgettoPS.setString(5, progetto.getNomeCliente().toUpperCase());
 		aggiornaProgettoPS.setString(6, progetto.getDescrizioneProgetto().toUpperCase());
+		aggiornaProgettoPS.setInt(7, codp);
 		aggiornaProgettoPS.executeUpdate();
 
 		for (PartecipanteProgetto p : partecipantiDaAggiungere) {

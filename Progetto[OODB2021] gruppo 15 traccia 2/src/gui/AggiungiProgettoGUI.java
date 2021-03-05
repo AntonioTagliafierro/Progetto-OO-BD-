@@ -108,6 +108,7 @@ public class AggiungiProgettoGUI extends JFrame {
 	private JButton RimuoviPartecipante_btn;
 	private ImageIcon iconaSvuotaAmbiti_btm;
 	private ImageIcon iconaRimuoviPartecipante_btm;
+	private JButton Indietro_btm;
 
 	public AggiungiProgettoGUI(Controller c) {
 
@@ -118,7 +119,7 @@ public class AggiungiProgettoGUI extends JFrame {
 				int a = JOptionPane.showConfirmDialog(null, "Attenzione, se confermi perderai i dati inseriti",
 						"Attenzione", JOptionPane.WARNING_MESSAGE);
 				if (a == 0) {
-					c.ChiudiAggiungiProgettoSenzaDialog();
+					c.TornaHomeDaAggiungiProgetto();
 				}
 			}
 		});
@@ -142,8 +143,8 @@ public class AggiungiProgettoGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JButton Indietro_btm = new JButton("");
-		iconaIndietro_btm = new ImageIcon((AggiungiProgettoGUI.class.getResource("/icon/iconaIndietrobtm.png.png")));
+		Indietro_btm = new JButton("");
+		iconaIndietro_btm = new ImageIcon((AggiungiProgettoGUI.class.getResource("/icon/iconaIndietrobtm.png")));
 		Indietro_btm.setIcon(iconaIndietro_btm);
 		Indietro_btm.addMouseListener(new MouseAdapter() {
 			@Override
@@ -156,8 +157,7 @@ public class AggiungiProgettoGUI extends JFrame {
 				theController.ChiudiAggiungiProgetto();
 			}
 		});
-		ImageIcon iconaIndietro_btm = new ImageIcon(
-				"C:\\Users\\Gianpietro\\Desktop\\GP\\Uni\\imm\\iconaIndietrobtm.png");
+
 		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Indietro_btm.setFocusable(false);
 		Indietro_btm.setBounds(10, 617, 103, 37);
@@ -200,14 +200,14 @@ public class AggiungiProgettoGUI extends JFrame {
 		Ambiti_TF.setBorder(new LineBorder(Color.BLACK));
 
 		Ambiti_TF.setToolTipText("Inserisci gli ambiti del progetto.");
-		Ambiti_TF.setBounds(430, 20, 86, 23);
+		Ambiti_TF.setBounds(431, 20, 86, 23);
 		contentPane.add(Ambiti_TF);
 		Ambiti_TF.setColumns(10);
 
 		AggiungiAmbiti_btn = new JButton("");
 		AggiungiAmbiti_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		iconaAggiungiAmbito_btm = new ImageIcon(
-				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaAggiungiProgettobtm.png.png")));
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaAggiungibtm.png")));
 		AggiungiAmbiti_btn.setIcon(iconaAggiungiAmbito_btm);
 		AggiungiAmbiti_btn.setToolTipText("Aggiungi ambito");
 		AggiungiAmbiti_btn.addActionListener(new ActionListener() {
@@ -476,7 +476,7 @@ public class AggiungiProgettoGUI extends JFrame {
 
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBorder(new LineBorder(Color.BLACK));
-		scrollPane_1.setBounds(430, 43, 137, 127);
+		scrollPane_1.setBounds(431, 42, 136, 127);
 		contentPane.add(scrollPane_1);
 
 		Ambiti_Table = new JTable(righe, colonne) {
@@ -490,6 +490,7 @@ public class AggiungiProgettoGUI extends JFrame {
 		Ambiti_Table.setModel(model2);
 
 		scrollPane = new JScrollPane();
+		scrollPane.setBorder(new LineBorder(Color.BLACK));
 		scrollPane.setBounds(652, 40, 289, 127);
 		contentPane.add(scrollPane);
 
@@ -527,7 +528,7 @@ public class AggiungiProgettoGUI extends JFrame {
 		CercaPartecipante_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CercaPartecipante_btm.setHorizontalTextPosition(SwingConstants.LEFT);
 		iconaCercaPartecipante_btm = new ImageIcon(
-				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCercaProgettobtm.png.png")));
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCercabtm.png")));
 		CercaPartecipante_btm.setIcon(iconaCercaPartecipante_btm);
 		CercaPartecipante_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -593,15 +594,13 @@ public class AggiungiProgettoGUI extends JFrame {
 		CercaPartecipante_btm.setFocusable(false);
 		CercaPartecipante_btm.setBounds(196, 197, 124, 39);
 		contentPane.add(CercaPartecipante_btm);
-		// ImageIcon iconaCercaPartecipante = new
-		// ImageIcon("C:\\Users\\Gianpietro\\Desktop\\GP\\Uni\\imm\\iconaCercaProgettobtm.png");
 
 		CancellaFiltri_btm = new JButton("Elimina filtri");
 		CancellaFiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CancellaFiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
 		CancellaFiltri_btm.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		iconaCancellaFiltri_btm = new ImageIcon(
-				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellabtm.png")));
 		CancellaFiltri_btm.setIcon(iconaCancellaFiltri_btm);
 		CancellaFiltri_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -771,7 +770,7 @@ public class AggiungiProgettoGUI extends JFrame {
 		RimuoviAmbito_btm = new JButton("");
 		RimuoviAmbito_btm.setFocusable(false);
 		iconaCancellaAmbiti_btm = new ImageIcon(
-				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellabtm.png")));
 		RimuoviAmbito_btm.setIcon(iconaCancellaAmbiti_btm);
 		RimuoviAmbito_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		RimuoviAmbito_btm.addActionListener(new ActionListener() {
@@ -792,7 +791,7 @@ public class AggiungiProgettoGUI extends JFrame {
 		RimuoviPartecipante_btn = new JButton("Rimuovi");
 		RimuoviPartecipante_btn.setHorizontalTextPosition(SwingConstants.LEFT);
 		iconaRimuoviPartecipante_btm = new ImageIcon(
-				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+				(VisualizzaModificaProgettoGUI.class.getResource("/icon/iconaCancellabtm.png")));
 		RimuoviPartecipante_btn.setIcon(iconaRimuoviPartecipante_btm);
 		RimuoviPartecipante_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		RimuoviPartecipante_btn.setToolTipText("Rimuovi partecipante dalla tabella");

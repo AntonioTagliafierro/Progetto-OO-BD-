@@ -3,37 +3,25 @@ package entity;
 import java.util.ArrayList;
 
 public class PiattaformaMeeting {
-	
+
 	private String nomePiattaforma;
-	private int limitePartecipanti;
+	private String limitePartecipanti;
 	private ArrayList<MeetingTelematico> meetingTelematici;
-	
-	//Costruttore
-	
-	
-	public PiattaformaMeeting(String nomePiattaforma, int limitePartecipanti) {
+
+	// Costruttore
+
+	public PiattaformaMeeting(String nomePiattaforma, String limitePartecipanti) {
 		super();
 		this.nomePiattaforma = nomePiattaforma;
 		this.limitePartecipanti = limitePartecipanti;
 	}
-	
 
 	public PiattaformaMeeting() {
 		super();
 	}
 
+	// Getter e Setter
 
-	public PiattaformaMeeting(String nomePiattaforma, int limitePartecipanti,
-			ArrayList<MeetingTelematico> meetingTelematici) {
-		super();
-		this.nomePiattaforma = nomePiattaforma;
-		this.limitePartecipanti = limitePartecipanti;
-		this.meetingTelematici = meetingTelematici;
-	}
-
-
-	//Getter e Setter
-	
 	public String getNomePiattaforma() {
 		return nomePiattaforma;
 	}
@@ -42,11 +30,11 @@ public class PiattaformaMeeting {
 		this.nomePiattaforma = nomePiattaforma;
 	}
 
-	public int getLimitePartecipanti() {
+	public String getLimitePartecipanti() {
 		return limitePartecipanti;
 	}
 
-	public void setLimitePartecipanti(int limitePartecipanti) {
+	public void setLimitePartecipanti(String limitePartecipanti) {
 		this.limitePartecipanti = limitePartecipanti;
 	}
 
@@ -57,7 +45,5 @@ public class PiattaformaMeeting {
 	public void setMeetingTelematici(ArrayList<MeetingTelematico> meetingTelematici) {
 		this.meetingTelematici = meetingTelematici;
 	}
-	
-	
 
 }

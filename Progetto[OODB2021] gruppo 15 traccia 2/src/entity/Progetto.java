@@ -2,6 +2,7 @@ package entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Progetto {
 
@@ -9,8 +10,8 @@ public class Progetto {
 	private String codProgetto;
 	private String nomeProgetto;
 	private String tipologiaProgetto;
-	private LocalDate dataInizioProgetto;
-	private LocalDate dataFineProgetto;
+	private Date dataInizioProgetto;
+	private Date dataScadenzaProgetto;
 	private String statusProgetto;
 	private String nomeCliente;
 	private String descrizioneProgetto;
@@ -33,24 +34,11 @@ public class Progetto {
 		this.statusProgetto = statusProgetto;
 	}
 
-	public Progetto(String nomeProgetto, String tipologiaProgetto, LocalDate dataInizioProgetto,
-			LocalDate dataFineProgetto, String statusProgetto, String nomeCliente, String descrizioneProgetto,
-			ArrayList<Ambito> ambiti, PartecipanteProgetto projectManager,
-			ArrayList<PartecipanteProgetto> partecipantiProgetto) {
-		super();
-		this.nomeProgetto = nomeProgetto;
-		this.tipologiaProgetto = tipologiaProgetto;
-		this.dataInizioProgetto = dataInizioProgetto;
-		this.dataFineProgetto = dataFineProgetto;
-		this.statusProgetto = statusProgetto;
-		this.nomeCliente = nomeCliente;
-		this.descrizioneProgetto = descrizioneProgetto;
-		this.ambiti = new ArrayList<Ambito>();
-		this.projectManager = projectManager;
-		this.partecipantiProgetto = new ArrayList<PartecipanteProgetto>();
-	}
-
 	// Getter e Setter
+
+	public Progetto() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getCodProgetto() {
 		return codProgetto;
@@ -76,20 +64,20 @@ public class Progetto {
 		this.tipologiaProgetto = tipologiaProgetto;
 	}
 
-	public LocalDate getDataInizioProgetto() {
+	public Date getDataInizioProgetto() {
 		return dataInizioProgetto;
 	}
 
-	public void setDataInizioProgetto(LocalDate dataInizioProgetto) {
+	public void setDataInizioProgetto(Date dataInizioProgetto) {
 		this.dataInizioProgetto = dataInizioProgetto;
 	}
 
-	public LocalDate getDataFineProgetto() {
-		return dataFineProgetto;
+	public Date getDataScadenzaProgetto() {
+		return dataScadenzaProgetto;
 	}
 
-	public void setDataFineProgetto(LocalDate dataFineProgetto) {
-		this.dataFineProgetto = dataFineProgetto;
+	public void setDataScadenzaProgetto(Date dataScadenzaProgetto) {
+		this.dataScadenzaProgetto = dataScadenzaProgetto;
 	}
 
 	public String getStatusProgetto() {

@@ -1,7 +1,7 @@
 package entity;
 
 public class ProgettiDelDipendente {
-	
+
 	private Dipendente dipendente;
 	private String nomeProgetto;
 	private String tipologia;

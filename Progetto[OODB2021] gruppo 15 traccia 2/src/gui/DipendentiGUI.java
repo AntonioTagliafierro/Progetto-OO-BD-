@@ -12,6 +12,7 @@ import controller.Controller;
 import entity.Dipendente;
 
 import javax.swing.JScrollPane;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.util.ArrayList;
 
@@ -27,6 +28,9 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.border.LineBorder;
 
 public class DipendentiGUI extends JFrame {
 
@@ -50,10 +54,18 @@ public class DipendentiGUI extends JFrame {
 	private JTextField salariotf;
 	private JTextField valutazionetf;
 	private JButton visualizzabtn;
+	private ImageIcon indietrobtn;
+	private ImageIcon aggiungiDipendente;
+	private ImageIcon eliminaDipendente;
+	private ImageIcon filtraDipendente;
+	private ImageIcon cancellaFiltri;
+	private ImageIcon cercaConFiltri;
+	private ImageIcon modifica;
 
 	private TableColumnModel colonne = null;
 
 	private TableModel righe = null;
+	private JButton cercabtn;
 
 	/**
 	 * Create the frame.
@@ -63,7 +75,14 @@ public class DipendentiGUI extends JFrame {
 	 */
 
 	public DipendentiGUI(Controller c) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				c.ChiudiDipendentiGui();
+			}
+		});
 		theController = c;
+		setResizable(false);
 
 		try {
 			this.dipendenti = c.RecuperaDipendenti();
@@ -72,16 +91,20 @@ public class DipendentiGUI extends JFrame {
 			e.printStackTrace();
 		}
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(HomeGUI.class.getResource("/icon/iconaFrame.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(DipendentiGUI.class.getResource("/icon/iconaFrame.png")));
 		setTitle("GestioneDipendenti");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 799, 447);
+		setBounds(100, 100, 820, 458);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 0, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		tornaHomebtn = new JButton("Indietro");
+		indietrobtn = new ImageIcon((HomeGUI.class.getResource("/icon/iconaIndietrobtm.png")));
+		tornaHomebtn = new JButton("");
+		tornaHomebtn.setIcon(indietrobtn);
+		tornaHomebtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		tornaHomebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				c.ChiudiDipendentiGui();
@@ -92,7 +115,10 @@ public class DipendentiGUI extends JFrame {
 		tornaHomebtn.setFocusable(false);
 		contentPane.add(tornaHomebtn);
 
-		eliminaDipendentebtn = new JButton("elimina");
+		eliminaDipendente = new ImageIcon((DipendentiGUI.class.getResource("/icon/iconaEliminaDipendentibtn.png")));
+		eliminaDipendentebtn = new JButton("");
+		eliminaDipendentebtn.setIcon(eliminaDipendente);
+		eliminaDipendentebtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		eliminaDipendentebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int i = mostraDipendentiTable.getSelectedRow();
@@ -107,12 +133,17 @@ public class DipendentiGUI extends JFrame {
 						String codiceFiscale = mostraDipendentiTable.getValueAt(i, 0).toString();
 						try {
 							c.EliminaDipendente(codiceFiscale);
+							JOptionPane.showMessageDialog(null,
+									"Il dipendente " + cognome + " " + nome + " è stato eliminato", "Eliminato",
+									JOptionPane.INFORMATION_MESSAGE);
+							model.removeRow(i);
+
 						} catch (SQLException e) {
 
 							e.printStackTrace();
 							int selezione = JOptionPane.showOptionDialog(null,
 									"Il dipendente " + cognome + " " + nome
-											+ " non può essere eliminato,vuoi impostare il suo status su 'Non Attivo'?",
+											+ " non può essere eliminato,vuoi disattivarlo?",
 									"Disattivare", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 									new Object[] { "Yes", "No" }, JOptionPane.YES_OPTION);
 							if (selezione == JOptionPane.YES_OPTION) {
@@ -126,14 +157,17 @@ public class DipendentiGUI extends JFrame {
 								JOptionPane.showMessageDialog(null,
 										"Il dipendente " + cognome + " " + nome + " è stato disattivato", "Disattivato",
 										JOptionPane.INFORMATION_MESSAGE);
+								try {
+									dipendenti = c.RecuperaDipendenti();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								c.riempiTableDipendenti(model, dipendenti);
 
 							}
 
 						}
-						JOptionPane.showMessageDialog(null,
-								"Il dipendente " + cognome + " " + nome + " è stato eliminato", "Eliminato",
-								JOptionPane.INFORMATION_MESSAGE);
-						model.removeRow(i);
 
 					} else {
 						return;
@@ -146,11 +180,14 @@ public class DipendentiGUI extends JFrame {
 			}
 		});
 		eliminaDipendentebtn.setBounds(252, 0, 89, 69);
-		eliminaDipendentebtn.setToolTipText("Elimina Dipendente");
+		eliminaDipendentebtn.setToolTipText("Elimina Dipendente Selezionato");
 		eliminaDipendentebtn.setFocusable(false);
 		contentPane.add(eliminaDipendentebtn);
 
-		filtraDipendentebtn = new JButton("filtra");
+		filtraDipendente = new ImageIcon((DipendentiGUI.class.getResource("/icon/iconaFiltraDipendentibtn.png")));
+		filtraDipendentebtn = new JButton("");
+		filtraDipendentebtn.setIcon(filtraDipendente);
+		filtraDipendentebtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		filtraDipendentebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				filtriPanel.setVisible(true);
@@ -161,7 +198,10 @@ public class DipendentiGUI extends JFrame {
 		filtraDipendentebtn.setFocusable(false);
 		contentPane.add(filtraDipendentebtn);
 
-		aggiungiDipendentebtn = new JButton("aggiungi");
+		aggiungiDipendente = new ImageIcon((DipendentiGUI.class.getResource("/icon/iconaAggiungiDipendentibtn.png")));
+		aggiungiDipendentebtn = new JButton("");
+		aggiungiDipendentebtn.setIcon(aggiungiDipendente);
+		aggiungiDipendentebtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		aggiungiDipendentebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				c.ApriAggiungiDipendenteGui();
@@ -173,7 +213,9 @@ public class DipendentiGUI extends JFrame {
 		contentPane.add(aggiungiDipendentebtn);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 188, 783, 220);
+		scrollPane.setBackground(new Color(245, 245, 245));
+		scrollPane.setBorder(new LineBorder(Color.BLACK, 1, true));
+		scrollPane.setBounds(0, 187, 805, 231);
 		contentPane.add(scrollPane);
 
 		mostraDipendentiTable = new JTable(righe, colonne) {
@@ -181,7 +223,8 @@ public class DipendentiGUI extends JFrame {
 				return false;
 			}
 		};
-		mostraDipendentiTable.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		mostraDipendentiTable.setBackground(new Color(245, 245, 245));
+		mostraDipendentiTable.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		scrollPane.setViewportView(mostraDipendentiTable);
 		model = new DefaultTableModel();
 		mostraDipendentiTable.setModel(model);
@@ -191,8 +234,9 @@ public class DipendentiGUI extends JFrame {
 		c.riempiTableDipendenti(model, dipendenti);
 
 		filtriPanel = new JPanel();
-		filtriPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		filtriPanel.setBounds(10, 103, 763, 53);
+		filtriPanel.setBackground(new Color(245, 245, 245));
+		filtriPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		filtriPanel.setBounds(10, 99, 783, 53);
 		contentPane.add(filtriPanel);
 		filtriPanel.setLayout(null);
 		filtriPanel.setVisible(false);
@@ -213,6 +257,8 @@ public class DipendentiGUI extends JFrame {
 		filtriPanel.add(statuslbl);
 
 		statuscb = new JComboBox();
+		statuscb.setToolTipText("Seleziona Lo Status");
+		statuscb.setBorder(new LineBorder(new Color(0, 0, 0)));
 		statuscb.setFocusable(false);
 		statuscb.setBounds(68, 19, 106, 22);
 		filtriPanel.add(statuscb);
@@ -220,7 +266,11 @@ public class DipendentiGUI extends JFrame {
 		statuscb.addItem("NON ATTIVO");
 		statuscb.addItem("ENTRAMBI");
 
-		cancellabtn = new JButton("Cancella");
+		cancellaFiltri = new ImageIcon((DipendentiGUI.class.getResource("/icon/iconaCancellabtm.png")));
+		cancellabtn = new JButton("");
+		cancellabtn.setToolTipText("Cancella Filtri");
+		cancellabtn.setIcon(cancellaFiltri);
+		cancellabtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		cancellabtn.addActionListener(new ActionListener() {
 			private ArrayList<Dipendente> dipendenti;
 
@@ -239,10 +289,14 @@ public class DipendentiGUI extends JFrame {
 		});
 		cancellabtn.setFocusable(false);
 		cancellabtn.setAlignmentX(0.5f);
-		cancellabtn.setBounds(586, 11, 89, 38);
+		cancellabtn.setBounds(596, 11, 89, 38);
 		filtriPanel.add(cancellabtn);
 
-		JButton cercabtn = new JButton("Cerca");
+		cercaConFiltri = new ImageIcon((DipendentiGUI.class.getResource("/icon/iconaCercabtm.png")));
+		cercabtn = new JButton("");
+		cercabtn.setToolTipText("Cerca");
+		cercabtn.setIcon(cercaConFiltri);
+		cercabtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		cercabtn.addActionListener(new ActionListener() {
 			private ArrayList<Dipendente> dipendenti;
 
@@ -258,41 +312,52 @@ public class DipendentiGUI extends JFrame {
 						salariotf.setBackground(Color.white);
 					}
 				}
-					if (!c.ControlloStringaVuota(valutazionetf.getText())) {
-						if (!c.ControlloValutazione(valutazionetf.getText())) {
-							JOptionPane.showMessageDialog(null, "Valutazione non corretta,inserisci un numero",
-									"Errore", JOptionPane.ERROR_MESSAGE);
-							valutazionetf.setBackground(Color.red);
-							return;
+				if (!c.ControlloStringaVuota(valutazionetf.getText())) {
+					if (!c.ControlloValutazione(valutazionetf.getText())) {
+						JOptionPane.showMessageDialog(null, "Valutazione non corretta,inserisci un numero", "Errore",
+								JOptionPane.ERROR_MESSAGE);
+						valutazionetf.setBackground(Color.red);
+						return;
 
-						} else {
-							valutazionetf.setBackground(Color.white);
-						}
+					} else {
+						valutazionetf.setBackground(Color.white);
 					}
-				
+				}
+
 				this.dipendenti = c.RecuperaDipendentiFiltrati(statuscb.getSelectedItem().toString(),
 						salariotf.getText(), valutazionetf.getText());
 				c.riempiTableDipendenti(model, dipendenti);
 			}
 		});
 		cercabtn.setFocusable(false);
-		cercabtn.setBounds(674, 11, 89, 38);
+		cercabtn.setBounds(684, 11, 89, 38);
 		filtriPanel.add(cercabtn);
 
 		salariotf = new JTextField();
+		salariotf.setToolTipText(
+				"Inserisci Salario,Verr\u00E0 ricercato con valore -100 +100 rispetto al valore inserito");
+		salariotf.setBackground(Color.WHITE);
+		salariotf.setBorder(new LineBorder(Color.BLACK));
 		salariotf.setBounds(265, 20, 86, 20);
 		filtriPanel.add(salariotf);
 		salariotf.setColumns(10);
 
 		valutazionetf = new JTextField();
+		valutazionetf.setToolTipText(
+				"Inserisci Valutazione,Verr\u00E0 ricercato con valori -1 e +1 rispetto al valore inserito");
+		valutazionetf.setBorder(new LineBorder(Color.BLACK));
 		valutazionetf.setBounds(471, 20, 86, 20);
 		filtriPanel.add(valutazionetf);
 		valutazionetf.setColumns(10);
-		
-		visualizzabtn = new JButton("Visualizza");
+
+		modifica = new ImageIcon((DipendentiGUI.class.getResource("/icon/iconaModificaDipendentibtn.png")));
+		visualizzabtn = new JButton("");
+		visualizzabtn.setToolTipText("Visualizza e Modifica Dipendente Selezionato");
+		visualizzabtn.setIcon(modifica);
+		visualizzabtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		visualizzabtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				int i = mostraDipendentiTable.getSelectedRow();
 				if (i >= 0) {
 					String codiceFiscale = mostraDipendentiTable.getValueAt(i, 0).toString();
@@ -308,4 +373,5 @@ public class DipendentiGUI extends JFrame {
 		visualizzabtn.setBounds(340, 0, 89, 69);
 		contentPane.add(visualizzabtn);
 	}
+
 }

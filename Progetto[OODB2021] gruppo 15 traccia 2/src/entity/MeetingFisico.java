@@ -5,41 +5,32 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MeetingFisico {
+public class MeetingFisico extends Meeting {
 
 	private String codMeetingFisico;
-	private Date dataMeetingFisico;
-	private LocalTime oraInizioMeetingFisico;
-	private LocalTime oraFineMeetingFisico;
-	private String descrizioneMeetingFisico;
+
 	private SalaMeeting sala;
 	private ArrayList<Dipendente> partecipantiMeetingFisico;
+	private ArrayList<PartecipanteMeeting> partecipanti;
 
 	// Costruttori
 
-	
 	public MeetingFisico(String codMeetingFisico) {
 		super();
 		this.codMeetingFisico = codMeetingFisico;
 	}
 
+	public ArrayList<PartecipanteMeeting> getPartecipanti() {
+		return partecipanti;
+	}
+
+	public void setPartecipanti(ArrayList<PartecipanteMeeting> partecipanti) {
+		this.partecipanti = partecipanti;
+	}
+
 	public MeetingFisico() {
 		super();
 	}
-
-	public MeetingFisico(Date dataMeetingFisico, LocalTime oraInizioMeetingFisico,
-			LocalTime oraFineMeetingFisico, String descrizioneMeetingFisico, SalaMeeting sala) {
-		super();
-		this.dataMeetingFisico = dataMeetingFisico;
-		this.oraInizioMeetingFisico = oraInizioMeetingFisico;
-		this.oraFineMeetingFisico = oraFineMeetingFisico;
-		this.descrizioneMeetingFisico = descrizioneMeetingFisico;
-		this.sala = sala;
-	}
-
-
-
-
 
 	// Getter e Setter
 
@@ -49,39 +40,6 @@ public class MeetingFisico {
 
 	public void setCodMeetingFisico(String codMeetingFisico) {
 		this.codMeetingFisico = codMeetingFisico;
-	}
-
-
-	public Date getDataMeetingFisico() {
-		return dataMeetingFisico;
-	}
-
-	public void setDataMeetingFisico(Date dataMeetingFisico) {
-		this.dataMeetingFisico = dataMeetingFisico;
-	}
-
-	public LocalTime getOraInizioMeetingFisico() {
-		return oraInizioMeetingFisico;
-	}
-
-	public void setOraInizioMeetingFisico(LocalTime oraInizioMeetingFisico) {
-		this.oraInizioMeetingFisico = oraInizioMeetingFisico;
-	}
-
-	public LocalTime getOraFineMeetingFisico() {
-		return oraFineMeetingFisico;
-	}
-
-	public void setOraFineoMeetingFisico(LocalTime oraFineMeetingFisico) {
-		this.oraFineMeetingFisico = oraFineMeetingFisico;
-	}
-
-	public String getDescrizioneMeetingFisico() {
-		return descrizioneMeetingFisico;
-	}
-
-	public void setDescrizioneMeetingFisico(String descrizioneMeetingFisico) {
-		this.descrizioneMeetingFisico = descrizioneMeetingFisico;
 	}
 
 	public SalaMeeting getSala() {

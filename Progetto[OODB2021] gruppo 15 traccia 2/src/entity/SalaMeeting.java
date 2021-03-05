@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class SalaMeeting {
 
 	private String nomeSala;
-	private int nPosti;
+	private String nPosti;
 	private ArrayList<MeetingFisico> meetingFisici;
 
 	// Costruttore
 
-	public SalaMeeting(String nomeSala, int nPosti) {
+	public SalaMeeting(String nomeSala, String nPosti) {
 		super();
 		this.nomeSala = nomeSala;
 		this.nPosti = nPosti;
@@ -20,7 +20,7 @@ public class SalaMeeting {
 		super();
 	}
 
-	public SalaMeeting(String nomeSala, int nPosti, ArrayList<MeetingFisico> meetingFisici) {
+	public SalaMeeting(String nomeSala, String nPosti, ArrayList<MeetingFisico> meetingFisici) {
 		super();
 		this.nomeSala = nomeSala;
 		this.nPosti = nPosti;
@@ -37,11 +37,11 @@ public class SalaMeeting {
 		this.nomeSala = nomeSala;
 	}
 
-	public int getnPosti() {
+	public String getnPosti() {
 		return nPosti;
 	}
 
-	public void setnPosti(int nPosti) {
+	public void setnPosti(String nPosti) {
 		this.nPosti = nPosti;
 	}
 

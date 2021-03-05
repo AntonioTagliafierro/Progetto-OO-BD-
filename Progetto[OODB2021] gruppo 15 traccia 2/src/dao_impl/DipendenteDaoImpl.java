@@ -44,6 +44,17 @@ public class DipendenteDaoImpl implements DipendenteDao {
 	private PreparedStatement recuperaResidenzaDipendentePS;
 	private PreparedStatement aggiornaDipendentePS;
 	private PreparedStatement aggiornaResidenzaPS;
+	private PreparedStatement attivaDipendentePS;
+	private PreparedStatement recuperaDipendentiAttiviPS;
+	private PreparedStatement recuperaGeneralit‡PerFiltriPS;
+	private PreparedStatement recuperaPartecipanteProgettoTipologiaPS;
+	private PreparedStatement recuperaPartecipanteProgettoTipologiaeValutazionePS;
+	private PreparedStatement recuperaPartecipanteProgettoTipologiaeSalarioPS;
+	private PreparedStatement recuperaPartecipanteProgettoTipologiaSalarioeValutazionePS;
+	private PreparedStatement recuperaPartecipanteProgettoSalarioPS;
+	private PreparedStatement recuperaPartecipanteProgettoValutazionePS;
+	private PreparedStatement recuperaPartecipanteProgettoSalarioValutazionePS;
+	private ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
 
 	public DipendenteDaoImpl(Connection connection) {
 
@@ -67,6 +78,14 @@ public class DipendenteDaoImpl implements DipendenteDao {
 		}
 
 		try {
+			recuperaDipendentiAttiviPS = connessione.prepareStatement(
+					"SELECT  CODF,NOME,COGNOME,STATUS,VALUTAZIONE,SALARIO FROM DIPENDENTE WHERE STATUS LIKE 'ATTIVO'");
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		try {
 			eliminaDipendentePS = connessione.prepareStatement("DELETE FROM DIPENDENTE WHERE CODF = ?");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -78,6 +97,13 @@ public class DipendenteDaoImpl implements DipendenteDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		try {
+			attivaDipendentePS = connessione.prepareStatement("CALL ATTIVA_DIPENDENTE(?,?)");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		try {
@@ -178,6 +204,70 @@ public class DipendenteDaoImpl implements DipendenteDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			recuperaGeneralit‡PerFiltriPS = connessione.prepareStatement(
+					"SELECT CODF,NOME, COGNOME, VALUTAZIONE, SALARIO FROM DIPENDENTE WHERE STATUS LIKE 'ATTIVO' ");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoTipologiaPS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM progetti_per_tipologia NATURAL JOIN DIPENDENTE WHERE TIPOLOGIA LIKE ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoTipologiaeValutazionePS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM progetti_per_tipologia NATURAL JOIN DIPENDENTE WHERE TIPOLOGIA LIKE ? AND VALUTAZIONE BETWEEN ? AND ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoTipologiaeSalarioPS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM progetti_per_tipologia NATURAL JOIN DIPENDENTE WHERE TIPOLOGIA LIKE ? AND SALARIO BETWEEN ? AND ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoTipologiaSalarioeValutazionePS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM progetti_per_tipologia NATURAL JOIN DIPENDENTE WHERE TIPOLOGIA LIKE ? AND SALARIO BETWEEEN ? AND ? AND VALUTAZIONE BETWEEN ? AND ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoSalarioPS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM DIPENDENTE  WHERE SALARIO BETWEEN ? AND ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoValutazionePS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM DIPENDENTE WHERE VALUTAZIONE BETWEEN ? AND ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			recuperaPartecipanteProgettoSalarioValutazionePS = connessione.prepareStatement(
+					"SELECT CODF,NOME,COGNOME,SALARIO,VALUTAZIONE FROM DIPENDENTE WHERE SALARIO BETWEEN ? AND ? AND VALUTAZIONE BETWEEN ? AND ? AND STATUS LIKE 'ATTIVO' ");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -216,7 +306,7 @@ public class DipendenteDaoImpl implements DipendenteDao {
 	}
 
 	@Override
-	public void aggiornaDipendente(Dipendente dipendente, String vecchioCF) throws SQLException {
+	public void AggiornaDipendente(Dipendente dipendente, String vecchioCF) throws SQLException {
 		aggiornaResidenzaPS.setString(1, dipendente.getCodiceFiscale().toUpperCase());
 		aggiornaResidenzaPS.setString(2, dipendente.getResidenza().getProvincia());
 		aggiornaResidenzaPS.setString(3, dipendente.getResidenza().getCap());
@@ -237,6 +327,7 @@ public class DipendenteDaoImpl implements DipendenteDao {
 		aggiornaDipendentePS.setString(7, dipendente.getnCellulare());
 		aggiornaDipendentePS.setString(8, dipendente.getPathFoto());
 		aggiornaDipendentePS.setBigDecimal(9, BigDecimal.valueOf(dipendente.getSalarioMedio()));
+		aggiornaDipendentePS.setString(10, vecchioCF);
 
 		aggiornaDipendentePS.executeUpdate();
 
@@ -245,8 +336,8 @@ public class DipendenteDaoImpl implements DipendenteDao {
 	@Override
 	public ArrayList<Dipendente> RecuperaGeneralit‡Dipendenti() throws SQLException {
 
-		ResultSet rs = recuperaGeneralit‡PS.executeQuery();
 		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+		ResultSet rs = recuperaGeneralit‡PS.executeQuery();
 
 		while (rs.next()) {
 			Dipendente dipendente = new Dipendente();
@@ -265,7 +356,7 @@ public class DipendenteDaoImpl implements DipendenteDao {
 	}
 
 	@Override
-	public void eliminaDipendente(String codiceFiscale) throws SQLException {
+	public void EliminaDipendente(String codiceFiscale) throws SQLException {
 
 		eliminaDipendentePS.setString(1, codiceFiscale);
 		eliminaDipendentePS.executeUpdate();
@@ -278,6 +369,13 @@ public class DipendenteDaoImpl implements DipendenteDao {
 		disattivaDipendentePS.setString(1, codiceFiscale);
 		disattivaDipendentePS.execute();
 
+	}
+
+	@Override
+	public void AttivaDipendente(String codiceFiscale, Double salario) throws SQLException {
+		attivaDipendentePS.setString(1, codiceFiscale);
+		attivaDipendentePS.setBigDecimal(2, BigDecimal.valueOf(salario));
+		attivaDipendentePS.execute();
 	}
 
 	@Override
@@ -533,7 +631,7 @@ public class DipendenteDaoImpl implements DipendenteDao {
 			PiattaformaMeeting piattaforma = new PiattaformaMeeting();
 
 			meetingTelematico.setCodMeetingTelematico(String.valueOf(rsMeetingT.getInt("CODMT")));
-			meetingTelematico.setDataMeetingTelematico(rsMeetingT.getDate("DATAMT"));
+			meetingTelematico.setDataMeeting(rsMeetingT.getDate("DATAMT"));
 			piattaforma.setNomePiattaforma(rsMeetingT.getString("NOMEPIATTAFORMA"));
 			meetingTelematico.setPiattaforma(piattaforma);
 			meetingsTelematici.add(meetingTelematico);
@@ -551,7 +649,7 @@ public class DipendenteDaoImpl implements DipendenteDao {
 			SalaMeeting sala = new SalaMeeting();
 
 			meetingFisico.setCodMeetingFisico(String.valueOf(rsMeetingF.getInt("CODMF")));
-			meetingFisico.setDataMeetingFisico(rsMeetingF.getDate("DATAMF"));
+			meetingFisico.setDataMeeting(rsMeetingF.getDate("DATAMF"));
 			sala.setNomeSala(rsMeetingF.getString("NOMESALA"));
 			meetingFisico.setSala(sala);
 			meetingsFisici.add(meetingFisico);
@@ -562,6 +660,250 @@ public class DipendenteDaoImpl implements DipendenteDao {
 
 		return dipendente;
 
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaDipendentiAttivi() throws SQLException {
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+		ResultSet rs = recuperaDipendentiAttiviPS.executeQuery();
+
+		while (rs.next()) {
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+	}
+
+	public ArrayList<Dipendente> RecuperaGeneralit‡DipendentiPerFiltri() throws SQLException {
+
+		ResultSet rs = recuperaGeneralit‡PerFiltriPS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoTipologia(String tipologia) throws SQLException {
+
+		recuperaPartecipanteProgettoTipologiaPS.setString(1, tipologia.toUpperCase());
+
+		ResultSet rs = recuperaPartecipanteProgettoTipologiaPS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoTipologiaeValutazione(String tipologia, float valutazione)
+			throws SQLException {
+
+		float min_valutazione = valutazione - 1;
+		float max_valutazione = valutazione + 1;
+		recuperaPartecipanteProgettoTipologiaeValutazionePS.setString(1, tipologia.toUpperCase());
+		recuperaPartecipanteProgettoTipologiaeValutazionePS.setFloat(2, min_valutazione);
+		recuperaPartecipanteProgettoTipologiaeValutazionePS.setFloat(3, max_valutazione);
+		ResultSet rs = recuperaPartecipanteProgettoTipologiaeValutazionePS.executeQuery();
+
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoTipologiaeSalario(String tipologia, double salario)
+			throws SQLException {
+
+		BigDecimal minSalario = BigDecimal.valueOf(salario - 100);
+		BigDecimal maxSalario = BigDecimal.valueOf(salario + 100);
+		recuperaPartecipanteProgettoTipologiaeSalarioPS.setString(1, tipologia.toUpperCase());
+		recuperaPartecipanteProgettoTipologiaeSalarioPS.setBigDecimal(2, minSalario);
+		recuperaPartecipanteProgettoTipologiaeSalarioPS.setBigDecimal(2, maxSalario);
+
+		ResultSet rs = recuperaPartecipanteProgettoTipologiaeSalarioPS.executeQuery();
+
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoTipologiaSalarioValutazione(String tipologia,
+			double salario, float valutazione) throws SQLException {
+
+		float min_valutazione = valutazione - 1;
+		float max_valutazione = valutazione + 1;
+		BigDecimal minSalario = BigDecimal.valueOf(salario - 100);
+		BigDecimal maxSalario = BigDecimal.valueOf(salario + 100);
+		recuperaPartecipanteProgettoTipologiaSalarioeValutazionePS.setString(1, tipologia.toUpperCase());
+		recuperaPartecipanteProgettoTipologiaSalarioeValutazionePS.setBigDecimal(2, minSalario);
+		recuperaPartecipanteProgettoTipologiaSalarioeValutazionePS.setBigDecimal(3, maxSalario);
+		recuperaPartecipanteProgettoTipologiaeValutazionePS.setFloat(4, min_valutazione);
+		recuperaPartecipanteProgettoTipologiaeValutazionePS.setFloat(5, max_valutazione);
+
+		ResultSet rs = recuperaPartecipanteProgettoTipologiaSalarioeValutazionePS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoSalario(double salario) throws SQLException {
+
+		BigDecimal minSalario = BigDecimal.valueOf(salario - 100);
+		BigDecimal maxSalario = BigDecimal.valueOf(salario + 100);
+		recuperaPartecipanteProgettoSalarioPS.setBigDecimal(1, minSalario);
+		recuperaPartecipanteProgettoSalarioPS.setBigDecimal(2, maxSalario);
+
+		ResultSet rs = recuperaPartecipanteProgettoSalarioPS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoValutazione(float valutazione) throws SQLException {
+
+		float min_valutazione = valutazione - 1;
+		float max_valutazione = valutazione + 1;
+		recuperaPartecipanteProgettoValutazionePS.setFloat(1, min_valutazione);
+		recuperaPartecipanteProgettoValutazionePS.setFloat(2, max_valutazione);
+
+		ResultSet rs = recuperaPartecipanteProgettoValutazionePS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
+
+	}
+
+	@Override
+	public ArrayList<Dipendente> RecuperaPartecipantiProgettoSalarioeValutazione(double salario, float valutazione)
+			throws SQLException {
+
+		float min_valutazione = valutazione - 1;
+		float max_valutazione = valutazione + 1;
+		BigDecimal minSalario = BigDecimal.valueOf(salario - 100);
+		BigDecimal maxSalario = BigDecimal.valueOf(salario + 100);
+
+		recuperaPartecipanteProgettoSalarioValutazionePS.setBigDecimal(1, minSalario);
+		recuperaPartecipanteProgettoSalarioValutazionePS.setBigDecimal(2, maxSalario);
+		recuperaPartecipanteProgettoSalarioValutazionePS.setFloat(3, min_valutazione);
+		recuperaPartecipanteProgettoSalarioValutazionePS.setFloat(4, max_valutazione);
+
+		ResultSet rs = recuperaPartecipanteProgettoSalarioValutazionePS.executeQuery();
+		ArrayList<Dipendente> dipendenti = new ArrayList<Dipendente>();
+		while (rs.next()) {
+
+			Dipendente dipendente = new Dipendente();
+			dipendente.setCodiceFiscale(rs.getString("CODF"));
+			dipendente.setNome(rs.getString("NOME"));
+			dipendente.setCognome(rs.getString("COGNOME"));
+			dipendente.setValutazione(rs.getFloat("VALUTAZIONE"));
+			dipendente.setSalarioMedio(rs.getBigDecimal("SALARIO").doubleValue());
+
+			dipendenti.add(dipendente);
+		}
+		rs.close();
+
+		return dipendenti;
 	}
 
 }

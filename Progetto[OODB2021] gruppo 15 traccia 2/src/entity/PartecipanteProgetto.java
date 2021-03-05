@@ -1,14 +1,14 @@
 package entity;
 
 public class PartecipanteProgetto {
-	
-	//Attributi
-	
+
+	// Attributi
+
 	private Dipendente dipendente;
 	private Progetto progetto;
 	private String Ruolo;
-	
-	//Costruttore
+
+	// Costruttore
 
 	public PartecipanteProgetto(Dipendente dipendente, Progetto progetto, String ruolo) {
 		super();
@@ -17,8 +17,12 @@ public class PartecipanteProgetto {
 		Ruolo = ruolo;
 	}
 
-	//Getter e Setter
-	
+	// Getter e Setter
+
+	public PartecipanteProgetto() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Dipendente getDipendente() {
 		return dipendente;
 	}
@@ -42,11 +46,5 @@ public class PartecipanteProgetto {
 	public void setRuolo(String ruolo) {
 		Ruolo = ruolo;
 	}
-	
-	
-
-	
-	
-	
 
 }

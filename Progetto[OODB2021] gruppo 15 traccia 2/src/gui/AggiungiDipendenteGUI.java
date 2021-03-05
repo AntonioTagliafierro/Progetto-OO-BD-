@@ -31,6 +31,11 @@ import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.UIManager;
 
 public class AggiungiDipendenteGUI extends JFrame {
 
@@ -77,151 +82,207 @@ public class AggiungiDipendenteGUI extends JFrame {
 	private int controllo = 0;
 	private JButton eliminaFotobtn;
 	private String[] foto = new String[3];
-	
+	private ImageIcon iconaIndietro;
+	private ImageIcon iconaSalvataggio;
 	private String fotoVecchia = "/fotoDipendenti/fotoprofilodefault2.jpg";
 	private JComboBox<String> provinciacb;
 	private JComboBox<String> prefissocb;
 	private JDateChooser dataDiNascita;
-	
+	private JButton tornaIndietrobtn;
+	private JButton salvabtn;
+
 	/**
 	 * Create the frame.
 	 */
 	public AggiungiDipendenteGUI(Controller c) {
-		foto[1]="/fotoDipendenti/fotoprofilodefault2.jpg";
-		theController = c;
-		setIconImage(Toolkit.getDefaultToolkit().getImage(HomeGUI.class.getResource("/icon/iconaFrame.png")));
-		setTitle("AggiungiDipendente");
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 816, 491);
+				int a = JOptionPane.showConfirmDialog(null, "Attenzione, se confermi perderai i dati inseriti",
+						"Attenzione", JOptionPane.WARNING_MESSAGE);
+				if (a == 0) {
+					c.TornaHomeDaAggiungiDipendente();
+				}
+
+			}
+
+		});
+		foto[1] = "/fotoDipendenti/fotoprofilodefault2.jpg";
+		theController = c;
+		setIconImage(
+				Toolkit.getDefaultToolkit().getImage(AggiungiDipendenteGUI.class.getResource("/icon/iconaFrame.png")));
+		setTitle("AggiungiDipendente");
+		setResizable(false);
+
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 810, 491);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 0, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		nomelbl = new JLabel("Nome");
+		nomelbl.setForeground(Color.LIGHT_GRAY);
 		nomelbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		nomelbl.setBounds(10, 11, 47, 25);
 		contentPane.add(nomelbl);
 
 		cognomelbl = new JLabel("Cognome");
+		cognomelbl.setForeground(Color.LIGHT_GRAY);
 		cognomelbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		cognomelbl.setBounds(10, 33, 68, 25);
 		contentPane.add(cognomelbl);
 
 		codFlbl = new JLabel("Codice Fiscale");
+		codFlbl.setForeground(Color.LIGHT_GRAY);
 		codFlbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		codFlbl.setBounds(10, 64, 99, 14);
 		contentPane.add(codFlbl);
 
 		sessolbl = new JLabel("Sesso");
+		sessolbl.setForeground(Color.LIGHT_GRAY);
 		sessolbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		sessolbl.setBounds(11, 89, 46, 14);
 		contentPane.add(sessolbl);
 
 		dataNlbl = new JLabel("Data Di Nascita");
+		dataNlbl.setForeground(Color.LIGHT_GRAY);
 		dataNlbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		dataNlbl.setBounds(11, 114, 98, 14);
 		contentPane.add(dataNlbl);
 
 		emaillbl = new JLabel("e-mail");
+		emaillbl.setForeground(Color.LIGHT_GRAY);
 		emaillbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		emaillbl.setBounds(11, 139, 46, 14);
 		contentPane.add(emaillbl);
 
 		nCellularelbl = new JLabel("Numero Cellulare");
+		nCellularelbl.setForeground(Color.LIGHT_GRAY);
 		nCellularelbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		nCellularelbl.setBounds(11, 164, 111, 14);
 		contentPane.add(nCellularelbl);
 
 		cittàlbl = new JLabel("Citt\u00E0");
+		cittàlbl.setForeground(Color.LIGHT_GRAY);
 		cittàlbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		cittàlbl.setHorizontalAlignment(SwingConstants.LEFT);
 		cittàlbl.setBounds(10, 189, 37, 14);
 		contentPane.add(cittàlbl);
 
 		caplbl = new JLabel("CAP");
+		caplbl.setForeground(Color.LIGHT_GRAY);
 		caplbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		caplbl.setBounds(10, 214, 30, 14);
 		contentPane.add(caplbl);
 
 		provincialbl = new JLabel("Provincia");
+		provincialbl.setForeground(Color.LIGHT_GRAY);
 		provincialbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		provincialbl.setHorizontalAlignment(SwingConstants.LEFT);
 		provincialbl.setBounds(10, 239, 68, 14);
 		contentPane.add(provincialbl);
 
 		vialbl = new JLabel("Via");
+		vialbl.setForeground(Color.LIGHT_GRAY);
 		vialbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		vialbl.setBounds(10, 264, 30, 14);
 		contentPane.add(vialbl);
 
 		nCivicolbl = new JLabel("N\u00B0Civico");
+		nCivicolbl.setForeground(Color.LIGHT_GRAY);
 		nCivicolbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		nCivicolbl.setBounds(10, 289, 68, 14);
 		contentPane.add(nCivicolbl);
 
 		salariolbl = new JLabel("Salario");
+		salariolbl.setForeground(Color.LIGHT_GRAY);
 		salariolbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		salariolbl.setBounds(10, 335, 46, 14);
 		contentPane.add(salariolbl);
 
 		fotobtn = new JButton("");
+		fotobtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		fotobtn.setOpaque(false);
 		fotobtn.setFocusable(false);
 		fotobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				fotoVecchia = pathImage;
 				foto = c.SalvaFotoDipendente();
-				fotobtn.setIcon(c.resize(new ImageIcon(foto[2]),
-						369, 385));
+				fotobtn.setIcon(c.resize(new ImageIcon(foto[2]), 369, 385));
 				pathImage = foto[1];
 
 			}
 		});
 		fotobtn.setToolTipText("Inserisci Foto Dipendente");
 		fotobtn.setBounds(421, 11, 369, 385);
-		fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)),
-				369, 385));
+		fotobtn.setIcon(c.resize(new ImageIcon(AggiungiDipendenteGUI.class.getResource(pathImage)), 369, 385));
 		contentPane.add(fotobtn);
 
-		JButton tornaIndietrobtn = new JButton("Indietro");
+		iconaIndietro = new ImageIcon((AggiungiDipendenteGUI.class.getResource("/icon/iconaIndietrobtm.png")));
+		tornaIndietrobtn = new JButton("Indietro");
+		tornaIndietrobtn.setBackground(UIManager.getColor("Button.background"));
+		tornaIndietrobtn.setIcon(iconaIndietro);
+		tornaIndietrobtn.setBorder(new LineBorder(Color.BLACK, 1, true));
 		tornaIndietrobtn.setFocusable(false);
 		tornaIndietrobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				c.TornaDipendentiGUIDaAggiungiDipendente();
+				if (salvabtn.isVisible()) {
+					int a = JOptionPane.showConfirmDialog(null, "Attenzione, se confermi perderai i dati inseriti",
+							"Attenzione", JOptionPane.WARNING_MESSAGE);
+					if (a == 0) {
+						c.TornaDipendentiGUIDaAggiungiDipendente();
+					}
+				} else {
+					c.TornaDipendentiGUIDaAggiungiDipendente();
+				}
 			}
+
 		});
 		tornaIndietrobtn.setToolTipText("Torna Indietro");
-		tornaIndietrobtn.setBounds(10, 411, 89, 44);
+		tornaIndietrobtn.setBounds(10, 407, 89, 44);
 		contentPane.add(tornaIndietrobtn);
 
 		nometf = new JTextField();
+		nometf.setToolTipText("Inserisci Il Nome");
+		nometf.setBorder(new LineBorder(Color.BLACK));
 		nometf.setBounds(127, 15, 154, 20);
 		contentPane.add(nometf);
 		nometf.setColumns(10);
 
 		cognometf = new JTextField();
+		cognometf.setToolTipText("Inserisci Il Cognome");
+		cognometf.setBorder(new LineBorder(Color.BLACK));
 		cognometf.setBounds(127, 37, 154, 20);
 		contentPane.add(cognometf);
 		cognometf.setColumns(10);
 
 		codFtf = new JTextField();
+		codFtf.setToolTipText("Inserisci Il Codice Fiscale");
+		codFtf.setBorder(new LineBorder(Color.BLACK));
 		codFtf.setBounds(127, 63, 126, 20);
 		contentPane.add(codFtf);
 		codFtf.setColumns(10);
 
 		Mrbtn = new JRadioButton("M");
+		Mrbtn.setForeground(Color.LIGHT_GRAY);
+		Mrbtn.setBackground(new Color(0, 0, 128));
 		Mrbtn.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		Mrbtn.setBounds(127, 85, 37, 23);
 		contentPane.add(Mrbtn);
 
 		Frbtn = new JRadioButton("F");
+		Frbtn.setForeground(Color.LIGHT_GRAY);
+		Frbtn.setBackground(new Color(0, 0, 128));
 		Frbtn.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		Frbtn.setBounds(166, 85, 35, 23);
 		contentPane.add(Frbtn);
 
 		nonSpecificarerbtn = new JRadioButton("Non Specificare");
+		nonSpecificarerbtn.setForeground(Color.LIGHT_GRAY);
+		nonSpecificarerbtn.setBackground(new Color(0, 0, 128));
 		nonSpecificarerbtn.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		nonSpecificarerbtn.setBounds(203, 85, 134, 23);
 		contentPane.add(nonSpecificarerbtn);
@@ -233,44 +294,62 @@ public class AggiungiDipendenteGUI extends JFrame {
 		nonSpecificarerbtn.setSelected(true);
 
 		emailtf = new JTextField();
+		emailtf.setToolTipText("Inserisci L'Email");
+		emailtf.setBorder(new LineBorder(Color.BLACK));
 		emailtf.setBounds(127, 138, 284, 20);
 		contentPane.add(emailtf);
 		emailtf.setColumns(10);
 
 		prefissocb = new JComboBox<String>();
-		prefissocb.setBounds(127, 162, 165, 22);
+		prefissocb.setToolTipText("Seleziona Il Prefisso Nazionale");
+		prefissocb.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		prefissocb.setBounds(127, 162, 159, 22);
 		contentPane.add(prefissocb);
 
 		cellularetf = new JTextField();
+		cellularetf.setToolTipText("Inserisci Il Numero Di Cellulare");
+		cellularetf.setBorder(new LineBorder(Color.BLACK));
 		cellularetf.setBounds(290, 163, 121, 20);
 		contentPane.add(cellularetf);
 		cellularetf.setColumns(10);
 
 		cittàtf = new JTextField();
+		cittàtf.setToolTipText("Inserisci La Citt\u00E0");
+		cittàtf.setBorder(new LineBorder(Color.BLACK));
 		cittàtf.setBounds(127, 188, 190, 20);
 		contentPane.add(cittàtf);
 		cittàtf.setColumns(10);
 
 		captf = new JTextField();
+		captf.setToolTipText("Inserisci CAP");
+		captf.setBorder(new LineBorder(Color.BLACK));
 		captf.setBounds(127, 213, 99, 20);
 		contentPane.add(captf);
 		captf.setColumns(10);
 
 		provinciacb = new JComboBox<String>();
+		provinciacb.setToolTipText("Seleziona Provincia");
+		provinciacb.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		provinciacb.setBounds(127, 237, 57, 22);
 		contentPane.add(provinciacb);
 
 		viatf = new JTextField();
+		viatf.setToolTipText("Inserisci Via");
+		viatf.setBorder(new LineBorder(Color.BLACK));
 		viatf.setBounds(127, 263, 190, 20);
 		contentPane.add(viatf);
 		viatf.setColumns(10);
 
 		nCivicotf = new JTextField();
+		nCivicotf.setToolTipText("Inserisci Numero Civico");
+		nCivicotf.setBorder(new LineBorder(Color.BLACK));
 		nCivicotf.setBounds(127, 288, 86, 20);
 		contentPane.add(nCivicotf);
 		nCivicotf.setColumns(10);
 
 		salariotf = new JTextField();
+		salariotf.setToolTipText("Inserisci Salario");
+		salariotf.setBorder(new LineBorder(Color.BLACK));
 		salariotf.setBounds(127, 334, 86, 20);
 		contentPane.add(salariotf);
 		salariotf.setColumns(10);
@@ -281,7 +360,13 @@ public class AggiungiDipendenteGUI extends JFrame {
 
 		dataDiNascita.setDate(data);
 
-		JButton salvabtn = new JButton("Salva");
+		iconaSalvataggio = new ImageIcon((AggiungiDipendenteGUI.class.getResource("/icon/iconaSalvataggio.png")));
+		salvabtn = new JButton("Salva");
+		salvabtn.setHorizontalTextPosition(SwingConstants.LEFT);
+		salvabtn.setBackground(UIManager.getColor("Button.background"));
+		salvabtn.setForeground(Color.BLACK);
+		salvabtn.setIcon(iconaSalvataggio);
+		salvabtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		salvabtn.setFocusable(false);
 		salvabtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -439,7 +524,7 @@ public class AggiungiDipendenteGUI extends JFrame {
 						}
 						dipendente.setPathFoto(pathImage);
 						dipendente.setResidenza(residenza);
-						dipendente.setnCellulare(prefissoDaSalvare + " " + cellularetf.getText());
+						dipendente.setnCellulare(prefissoDaSalvare + cellularetf.getText());
 
 						try {
 							c.SalvaDipendente(dipendente);
@@ -460,8 +545,11 @@ public class AggiungiDipendenteGUI extends JFrame {
 								nCivicotf.setText("");
 								cellularetf.setText("");
 								dataDiNascita.setDate(data);
-								fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource("/fotoDipendenti/fotoprofilodefault2.jpg")),
-										369, 385));
+								fotobtn.setIcon(
+										c.resize(
+												new ImageIcon(AggiungiDipendenteGUI.class
+														.getResource("/fotoDipendenti/fotoprofilodefault2.jpg")),
+												369, 385));
 								pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
 
 							} else if (risposta == JOptionPane.NO_OPTION) {
@@ -482,15 +570,18 @@ public class AggiungiDipendenteGUI extends JFrame {
 			}
 		});
 		salvabtn.setToolTipText("Salva Dipendente");
-		salvabtn.setBounds(701, 411, 89, 44);
+		salvabtn.setBounds(701, 407, 89, 44);
 		contentPane.add(salvabtn);
-		
+
 		eliminaFotobtn = new JButton("Elimina Foto");
+		eliminaFotobtn.setToolTipText("Rimuovi Foto");
+		eliminaFotobtn.setFocusable(false);
+		eliminaFotobtn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		eliminaFotobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				pathImage = "/fotoDipendenti/fotoprofilodefault2.jpg";
-				fotobtn.setIcon(c.resize(new ImageIcon(HomeGUI.class.getResource(pathImage)),
-						369, 385));;
+				fotobtn.setIcon(c.resize(new ImageIcon(AggiungiDipendenteGUI.class.getResource(pathImage)), 369, 385));
+				;
 			}
 		});
 		eliminaFotobtn.setBounds(292, 373, 111, 23);

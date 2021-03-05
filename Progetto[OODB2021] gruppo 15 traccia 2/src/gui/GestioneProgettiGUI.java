@@ -68,30 +68,34 @@ public class GestioneProgettiGUI extends JFrame {
 	private ImageIcon iconaCancellaFiltri_btm;
 	private JButton CancellaFiltri_btm;
 	private ImageIcon iconaCercaFiltri_btm;
+	private JButton Cercafiltri_btm;
+	private JComboBox statuscb;
+	private JLabel Status_JL;
+	private ImageIcon cerca;
 
 	public GestioneProgettiGUI(Controller c, TableModel righe) {
-		
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				
-					
-						c.ChiudiGestioneProgetti();
-					
-				} 
-			
+
+				c.ChiudiGestioneProgetti();
+
+			}
+
 		});
 		setBackground(SystemColor.desktop);
 
 		theController = c;
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GestioneProgettiGUI.class.getResource("/icon/iconaFrame.png")));
+		setIconImage(
+				Toolkit.getDefaultToolkit().getImage(GestioneProgettiGUI.class.getResource("/icon/iconaFrame.png")));
 		try {
 			this.progetti = c.RecuperaProgetto();
 		} catch (SQLException e) {
-		
+
 			e.printStackTrace();
 		}
-		
+
 		setTitle("Gestione Progetti");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 671, 484);
@@ -101,7 +105,6 @@ public class GestioneProgettiGUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
 
 		Indietro_btm = new JButton("");
 		Indietro_btm.addMouseListener(new MouseAdapter() {
@@ -113,9 +116,9 @@ public class GestioneProgettiGUI extends JFrame {
 		Indietro_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Indietro_btm.setBackground(UIManager.getColor("Button.background"));
 		Indietro_btm.setFocusable(false);
-		iconaIndietro_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaIndietrobtm.png.png")));
+		iconaIndietro_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaIndietrobtm.png")));
 		Indietro_btm.setIcon(iconaIndietro_btm);
-		
+
 		Indietro_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				theController.ChiudiGestioneProgetti();
@@ -142,17 +145,18 @@ public class GestioneProgettiGUI extends JFrame {
 		Aggiungi_btm.setBounds(77, 1, 78, 54);
 		contentPane.add(Aggiungi_btm);
 		Aggiungi_btm.setFocusable(false);
-		iconaAggiungi_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaAggiungiProgettibtn.png")));
+		iconaAggiungi_btm = new ImageIcon(
+				(GestioneProgettiGUI.class.getResource("/icon/iconaAggiungiProgettibtn.png")));
 		Aggiungi_btm.setIcon(iconaAggiungi_btm);
-		
+
 		Cerca_btm = new JButton("");
 		Cerca_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Filtri_JP.setVisible(true);
-				
+
 			}
 		});
-		
+
 		Cerca_btm.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -160,12 +164,11 @@ public class GestioneProgettiGUI extends JFrame {
 			}
 		});
 		Cerca_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		
+
 		Cerca_btm.setBackground(UIManager.getColor("Button.background"));
 		iconaCerca_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCercaProgettibtn.png")));
 		Cerca_btm.setIcon(iconaCerca_btm);
-			
-	
+
 		Cerca_btm.setBounds(154, 1, 78, 54);
 		contentPane.add(Cerca_btm);
 		Cerca_btm.setFocusable(false);
@@ -173,10 +176,10 @@ public class GestioneProgettiGUI extends JFrame {
 		Elimina_btm = new JButton("");
 		Elimina_btm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				int i = MostraProgetti_JT.getSelectedRow();
 				if (i >= 0) {
-					
+
 					String nome = MostraProgetti_JT.getValueAt(i, 0).toString();
 					int opzione = JOptionPane.showOptionDialog(null,
 							"Sei sicuro di voler eliminare il progetto " + nome + "?", "Elimina",
@@ -186,15 +189,13 @@ public class GestioneProgettiGUI extends JFrame {
 						String codProgetto = MostraProgetti_JT.getValueAt(i, 1).toString();
 						try {
 							c.EliminaProgetto(codProgetto);
-							JOptionPane.showMessageDialog(null,
-									"Il progetto " + nome + " è stato eliminato", "Eliminato",
-									JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Il progetto " + nome + " è stato eliminato",
+									"Eliminato", JOptionPane.INFORMATION_MESSAGE);
 							model.removeRow(i);
 						} catch (SQLException b) {
 
 							b.printStackTrace();
-							}
-						
+						}
 
 					} else {
 						return;
@@ -206,15 +207,14 @@ public class GestioneProgettiGUI extends JFrame {
 				}
 			}
 		});
-					
-		
+
 		Elimina_btm.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				Elimina_btm.setToolTipText("Elimina un progetto");
 			}
 		});
-				
+
 		Elimina_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Elimina_btm.setBackground(UIManager.getColor("Button.background"));
 		iconaElimina_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCancellaProgettibtn.png")));
@@ -222,15 +222,14 @@ public class GestioneProgettiGUI extends JFrame {
 		Elimina_btm.setBounds(230, 1, 78, 54);
 		contentPane.add(Elimina_btm);
 		Elimina_btm.setFocusable(false);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		scrollPane.setFocusable(false);
 		scrollPane.setBounds(10, 222, 635, 184);
 		contentPane.add(scrollPane);
-		
-		
-		MostraProgetti_JT = new JTable(righe,colonne) {
+
+		MostraProgetti_JT = new JTable(righe, colonne) {
 			public boolean isCellEditable(int riga, int colonna) {
 				return false;
 			}
@@ -239,76 +238,77 @@ public class GestioneProgettiGUI extends JFrame {
 		scrollPane.setViewportView(MostraProgetti_JT);
 		model = new DefaultTableModel();
 		MostraProgetti_JT.setModel(model);
-		
+
 		Filtri_JP = new JPanel();
 		Filtri_JP.setVisible(false);
 		Filtri_JP.setBounds(46, 97, 556, 99);
 		contentPane.add(Filtri_JP);
 		Filtri_JP.setLayout(null);
-		
-		JLabel Status_JL = new JLabel("Status");
+
+		Status_JL = new JLabel("Status");
 		Status_JL.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		Status_JL.setBounds(10, 11, 58, 41);
 		Filtri_JP.add(Status_JL);
-		
-		JComboBox statuscb = new JComboBox();
+
+		statuscb = new JComboBox();
 		statuscb.setBounds(59, 22, 104, 22);
 		Filtri_JP.add(statuscb);
 		statuscb.setFocusable(false);
 		statuscb.addItem("FINITO");
 		statuscb.addItem("IN CORSO");
 		statuscb.addItem("ENTRAMBI");
-		
+
 		Tipologia_JL = new JLabel("Tipologia");
 		Tipologia_JL.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		Tipologia_JL.setBounds(193, 18, 82, 26);
 		Filtri_JP.add(Tipologia_JL);
-		
+
 		Tipologia_TF = new JTextField();
 		Tipologia_TF.setBounds(270, 23, 86, 20);
 		Filtri_JP.add(Tipologia_TF);
 		Tipologia_TF.setColumns(10);
-		
-		JButton Cancellafiltri_btm = new JButton("Cerca");
-		Cancellafiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
-		iconaCercaFiltri_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCercaProgettobtm.png.png")));
-		Cancellafiltri_btm.setIcon(iconaCercaFiltri_btm);
-		Cancellafiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		Cancellafiltri_btm.setFocusable(false);
-		Cancellafiltri_btm.addActionListener(new ActionListener() {
-			private ArrayList<Progetto> progetti;
-			public void actionPerformed(ActionEvent e) {
-				
 
-					if (!c.ControlloStringaVuota(Tipologia_TF.getText())) {
-						if (!c.controlloExpRegNome(Tipologia_TF.getText())) {
-							JOptionPane.showMessageDialog(null,
-									"Tipologia non corretta", "Errore",
-									JOptionPane.ERROR_MESSAGE);
-							Tipologia_TF.setBackground(Color.red);
-							return;
-						} else {
-							Tipologia_TF.setBackground(Color.white);
-						}
+		Cercafiltri_btm = new JButton("Cerca");
+		Cercafiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
+		Cercafiltri_btm.setIcon(iconaCercaFiltri_btm);
+		Cercafiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		Cercafiltri_btm.setFocusable(false);
+		cerca = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCercabtm.png")));
+		Cercafiltri_btm.setIcon(cerca);
+		Cercafiltri_btm.addActionListener(new ActionListener() {
+			private ArrayList<Progetto> progetti;
+
+			public void actionPerformed(ActionEvent e) {
+
+				if (!c.ControlloStringaVuota(Tipologia_TF.getText())) {
+					if (!c.controlloExpRegNome(Tipologia_TF.getText())) {
+						JOptionPane.showMessageDialog(null, "Tipologia non corretta", "Errore",
+								JOptionPane.ERROR_MESSAGE);
+						Tipologia_TF.setBackground(Color.red);
+						return;
+					} else {
+						Tipologia_TF.setBackground(Color.white);
 					}
-						
-						this.progetti = c.RecuperaProgettiFiltrati(statuscb.getSelectedItem().toString(),
-								Tipologia_TF.getText());
-						c.riempiTableProgetti(model, progetti);
+				}
+
+				this.progetti = c.RecuperaProgettiFiltrati(statuscb.getSelectedItem().toString(),
+						Tipologia_TF.getText());
+				c.riempiTableProgetti(model, progetti);
 			}
 		});
-		Cancellafiltri_btm.setBounds(457, 59, 89, 29);
-		Filtri_JP.add(Cancellafiltri_btm);
-		
+		Cercafiltri_btm.setBounds(457, 59, 89, 29);
+		Filtri_JP.add(Cercafiltri_btm);
+
 		CancellaFiltri_btm = new JButton("Cancella");
 		CancellaFiltri_btm.setHorizontalTextPosition(SwingConstants.LEFT);
-		iconaCancellaFiltri_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCancellaProgettobtm.png.png")));
+		iconaCancellaFiltri_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaCancellabtm.png")));
 		CancellaFiltri_btm.setIcon(iconaCancellaFiltri_btm);
 		CancellaFiltri_btm.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		CancellaFiltri_btm.addActionListener(new ActionListener() {
 			private ArrayList<Progetto> progetti;
+
 			public void actionPerformed(ActionEvent e) {
-				
+
 				Tipologia_TF.setText("");
 				Filtri_JP.setVisible(false);
 				try {
@@ -323,12 +323,13 @@ public class GestioneProgettiGUI extends JFrame {
 		CancellaFiltri_btm.setFocusable(false);
 		CancellaFiltri_btm.setBounds(367, 59, 89, 29);
 		Filtri_JP.add(CancellaFiltri_btm);
-		
+
 		Dettagli_btn = new JButton("");
 		Dettagli_btn.setToolTipText("Modifica un progetto");
 		Dettagli_btn.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Dettagli_btn.setFocusable(false);
-		iconaDettagli_btm = new ImageIcon((GestioneProgettiGUI.class.getResource("/icon/iconaModificaProgettibtn.png")));
+		iconaDettagli_btm = new ImageIcon(
+				(GestioneProgettiGUI.class.getResource("/icon/iconaModificaProgettibtn.png")));
 		Dettagli_btn.setIcon(iconaDettagli_btm);
 		Dettagli_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -345,14 +346,12 @@ public class GestioneProgettiGUI extends JFrame {
 		});
 		Dettagli_btn.setBounds(307, 1, 78, 54);
 		contentPane.add(Dettagli_btn);
-	
-		Object[] column = {"Nome","Codice Progetto","Data inizio","Tipologia","Status"};
+
+		Object[] column = { "Nome", "Codice Progetto", "Data inizio", "Tipologia", "Status" };
 		Object[] row = new Object[5];
 		model.setColumnIdentifiers(column);
 		MostraProgetti_JT.getTableHeader().setReorderingAllowed(false);
 		c.riempiTableProgetti(model, progetti);
-		
-	
-		
+
 	}
 }

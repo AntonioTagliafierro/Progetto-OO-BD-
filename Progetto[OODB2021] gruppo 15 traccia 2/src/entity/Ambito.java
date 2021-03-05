@@ -3,24 +3,22 @@ package entity;
 import java.util.ArrayList;
 
 public class Ambito {
-	
+
 	private String nomeAmbito;
-	private ArrayList <Progetto> progetti;
-	
-	//Costruttore
-	
-	public Ambito(String nomeAmbito, ArrayList<Progetto> progetti) {
-		super();
-		this.nomeAmbito = nomeAmbito;
-		this.progetti = new ArrayList <Progetto>();
-	}
+	private Progetto progetto;
+
+	// Costruttore
 
 	public Ambito(String nomeAmbito) {
 		super();
 		this.nomeAmbito = nomeAmbito;
 	}
 
-	//Getter e Setter
+	public Ambito() {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Getter e Setter
 	public String getNomeAmbito() {
 		return nomeAmbito;
 	}
@@ -29,14 +27,12 @@ public class Ambito {
 		this.nomeAmbito = nomeAmbito;
 	}
 
-	public ArrayList<Progetto> getProgetti() {
-		return progetti;
+	public Progetto getProgetto() {
+		return progetto;
 	}
 
-	public void setProgetti(ArrayList<Progetto> progetti) {
-		this.progetti = progetti;
+	public void setProgetto(Progetto progetto) {
+		this.progetto = progetto;
 	}
-	
-	
 
 }

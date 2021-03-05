@@ -31,7 +31,6 @@ public class Dipendente {
 		super();
 		this.codiceFiscale = codiceFiscale;
 	}
-	
 
 	public Dipendente(String nome, String cognome, String sesso, Date dataNascita, Residenza residenza) {
 		super();
@@ -41,7 +40,6 @@ public class Dipendente {
 		this.dataNascita = dataNascita;
 		this.residenza = residenza;
 	}
-
 
 	public Dipendente(String codiceFiscale, String nome, String cognome, String status, float valutazione,
 			double salarioMedio) {
@@ -54,8 +52,9 @@ public class Dipendente {
 		this.salarioMedio = salarioMedio;
 	}
 
-	public Dipendente(String codiceFiscale, String nome, String cognome, String email, Date dataNascita,
-			String status, String sesso, String nCellulare,float valutazione, double salarioMedio, String pathFoto, Residenza residenza) {
+	public Dipendente(String codiceFiscale, String nome, String cognome, String email, Date dataNascita, String status,
+			String sesso, String nCellulare, float valutazione, double salarioMedio, String pathFoto,
+			Residenza residenza) {
 		super();
 		this.codiceFiscale = codiceFiscale;
 		this.nome = nome;
@@ -78,9 +77,8 @@ public class Dipendente {
 		this.cognome = cognome;
 	}
 
-	 
-	public Dipendente(String codiceFiscale, String nome, String cognome, String email, Date dataNascita,
-			String status,String sesso, float valutazione, double salarioMedio, String pathFoto, Residenza residenza,
+	public Dipendente(String codiceFiscale, String nome, String cognome, String email, Date dataNascita, String status,
+			String sesso, float valutazione, double salarioMedio, String pathFoto, Residenza residenza,
 			ArrayList<PartecipanteProgetto> progetti, ArrayList<MeetingFisico> meetingFisici,
 			ArrayList<MeetingTelematico> meetingTelematici) {
 		super();
@@ -95,19 +93,16 @@ public class Dipendente {
 		this.salarioMedio = salarioMedio;
 		this.pathFoto = pathFoto;
 		this.residenza = residenza;
-		this.progetti =new ArrayList<PartecipanteProgetto>();
+		this.progetti = new ArrayList<PartecipanteProgetto>();
 		this.meetingFisici = new ArrayList<MeetingFisico>();
 		this.meetingTelematici = new ArrayList<MeetingTelematico>();
 	}
 
 	public Dipendente() {
-		
-	} 
-	
+
+	}
+
 	// Getter e Setter
-
-
-
 
 	public String getCodiceFiscale() {
 		return codiceFiscale;
@@ -229,11 +224,9 @@ public class Dipendente {
 		this.nCellulare = nCellulare;
 	}
 
-
 	public ArrayList<ProgettiDelDipendente> getProgettiDipendente() {
 		return progettiDipendente;
 	}
-
 
 	public void setProgettiDipendente(ArrayList<ProgettiDelDipendente> progettiDipendente) {
 		this.progettiDipendente = progettiDipendente;
