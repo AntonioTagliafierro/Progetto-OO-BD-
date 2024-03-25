@@ -1,16 +1,27 @@
-# Progetto-OO-BD-
-Progetto di Object Orientation e Basi di dati I -traccia 2 - ID gruppo :15
-TRACCIA 2: SISTEMA DI PLANNING PER GESTIONE DI PROGETTI 
-Si sviluppi un sistema informativo, composto da una base di dati relazionale e un applicativo Java dotato di
-GUI (Swing o JavaFX), per la gestione di progetti in un’azienda. Si tenga traccia dei partecipanti al progetto,
-identificando i ruoli per ognuno di essi (per ogni progetto ci sarà solo un project manager). Ad ogni progetto
-è associato una tipologia (“Ricerca di base”, “Ricerca Industriale”, “Ricerca sperimentale”, “Sviluppo
-Sperimentale”, ...) ed uno o più ambiti (Economia, Medicina, …). Il sistema dovrà permettere anche
-l'organizzazione di meeting fisicamente, in sale riunioni, o telematicamente su una piattaforma di
-videoconferenza. Si dovrà tenere traccia delle partecipazioni ai progetti ed ai meeting, ai fini della valutazione
-del singolo partecipante. In fase di creazione di un nuovo progetto, i partecipanti dovranno essere selezionati
-in base a criteri di ricerca che includono anche il salario medio e la valutazione aziendale del partecipante,
-oltre alla tipologia di progetti cui ha preso parte.
-Ad ogni partecipante sarà associata una lista di skill. Inoltre, in fase di creazione di un
-nuovo progetto, i partecipanti potranno essere scelti in funzione anche delle loro skill. In fase di registrazione
-di un partecipante, inserire le skill e se non presente nel DB, crearne una nuova.
+# 𝙎0𝙁𝙏: [𝘾𝙡𝙞𝙘𝙠 𝙃𝙚𝙧𝙚]()
+
+
+𝙁𝙚𝙖𝙩𝙪𝙧𝙚𝙨 🛠️:
+
+   𝙀𝙎𝙋 (𝙒𝙖𝙡𝙡𝙝𝙖𝙘𝙠) - 𝙩𝙝𝙞𝙨 𝙛𝙚𝙖𝙩𝙪𝙧𝙚 𝙤𝙛 𝙤𝙪𝙧 𝙘𝙝𝙚𝙖𝙩 𝙬𝙞𝙡𝙡 𝙖𝙡𝙡𝙤𝙬 𝙮𝙤𝙪 𝙩𝙤 𝙨𝙚𝙚 𝙗𝙚𝙝𝙞𝙣𝙙 𝙬𝙖𝙡𝙡𝙨! 𝙔𝙤𝙪 𝙬𝙞𝙡𝙡 𝙗𝙚 𝙖𝙗𝙡𝙚 𝙩𝙤 𝙨𝙚𝙚 𝙥𝙡𝙖𝙮𝙚𝙧𝙨' 𝙣𝙖𝙢𝙚𝙨, 𝙩𝙝𝙚𝙞𝙧 𝙝𝙚𝙖𝙡𝙩𝙝, 𝙚𝙭𝙖𝙘𝙩 𝙙𝙞𝙨𝙩𝙖𝙣𝙘𝙚 𝙩𝙤 𝙩𝙝𝙚𝙢, 𝙩𝙝𝙚 𝙘𝙤𝙣𝙩𝙚𝙣𝙩𝙨 𝙤𝙛 𝙘𝙧𝙖𝙩𝙚𝙨, 𝙫𝙖𝙧𝙞𝙤𝙪𝙨 𝙡𝙞𝙣𝙚𝙨 (𝙨𝙪𝙘𝙝 𝙖𝙨 𝙨𝙞𝙜𝙝𝙩 𝙡𝙞𝙣𝙚𝙨), 𝙩𝙚𝙖𝙢 𝙖𝙛𝙛𝙞𝙡𝙞𝙖𝙩𝙞𝙤𝙣 𝙖𝙣𝙙 𝙢𝙪𝙘𝙝 𝙢𝙤𝙧𝙚!
+   
+  𝘼𝙄𝙈𝘽𝙊𝙏 (𝘼𝙞𝙢 𝙏𝙖𝙧𝙜𝙚𝙩) - 𝙬𝙚 𝙝𝙖𝙫𝙚 𝙞𝙢𝙥𝙡𝙚𝙢𝙚𝙣𝙩𝙚𝙙 𝙩𝙝𝙚 𝙗𝙚𝙨𝙩 𝙖𝙞𝙢𝙗𝙤𝙩 (𝙖𝙪𝙩𝙤𝙢𝙖𝙩𝙞𝙘 𝙖𝙞𝙢𝙞𝙣𝙜) 𝙬𝙞𝙩𝙝 𝙡𝙤𝙩𝙨 𝙤𝙛 𝙘𝙪𝙨𝙩𝙤𝙢𝙞𝙯𝙖𝙩𝙞𝙤𝙣 𝙤𝙥𝙩𝙞𝙤𝙣𝙨. 𝙏𝙝𝙞𝙨 𝙖𝙡𝙡𝙤𝙬𝙨 𝙚𝙖𝙘𝙝 𝙤𝙛 𝙮𝙤𝙪𝙧 𝙨𝙝𝙤𝙩𝙨 𝙩𝙤 𝙗𝙚 𝙩𝙝𝙚 𝙡𝙖𝙨𝙩 𝙛𝙤𝙧 𝙮𝙤𝙪𝙧 𝙤𝙥𝙥𝙤𝙣𝙚𝙣𝙩. 𝙔𝙤𝙪 𝙘𝙖𝙣 𝙘𝙝𝙤𝙤𝙨𝙚 𝙩𝙝𝙚 𝙩𝙖𝙧𝙜𝙚𝙩 - 𝙞𝙩 𝙘𝙖𝙣 𝙗𝙚 𝙖 𝙨𝙥𝙚𝙘𝙞𝙛𝙞𝙘 𝙗𝙤𝙙𝙮 𝙥𝙖𝙧𝙩 𝙤𝙧 𝙟𝙪𝙨𝙩 𝙥𝙧𝙚𝙘𝙞𝙨𝙚 𝙖𝙞𝙢𝙞𝙣𝙜.
+    
+   𝙈𝙞𝙨𝙘 (𝙏𝙤𝙤𝙡𝙨) - 𝙤𝙪𝙧 𝙘𝙝𝙚𝙖𝙩 𝙖𝙡𝙨𝙤 𝙝𝙖𝙨 𝙖 𝙣𝙪𝙢𝙗𝙚𝙧 𝙤𝙛 𝙪𝙨𝙚𝙛𝙪𝙡 𝙩𝙤𝙤𝙡𝙨. 𝙁𝙤𝙧 𝙚𝙭𝙖𝙢𝙥𝙡𝙚, 𝙩𝙝𝙚𝙧𝙚 𝙞𝙨 𝙖 𝙛𝙪𝙣𝙘𝙩𝙞𝙤𝙣 𝙩𝙝𝙖𝙩 𝙧𝙚𝙢𝙤𝙫𝙚𝙨 𝙬𝙚𝙖𝙥𝙤𝙣 𝙧𝙚𝙘𝙤𝙞𝙡 𝙖𝙣𝙙 𝙢𝙖𝙠𝙚𝙨 𝙞𝙩 𝙧𝙚𝙡𝙤𝙖𝙙 𝙛𝙖𝙨𝙩𝙚𝙧. 𝙄𝙩 𝙞𝙨 𝙖𝙡𝙨𝙤 𝙥𝙤𝙨𝙨𝙞𝙗𝙡𝙚 𝙩𝙤 𝙧𝙚𝙙𝙪𝙘𝙚 𝙥𝙞𝙣𝙜, 𝙞𝙣𝙘𝙧𝙚𝙖𝙨𝙚 𝙁𝙋𝙎 𝙗𝙮 𝙧𝙚𝙢𝙤𝙫𝙞𝙣𝙜 𝙪𝙣𝙣𝙚𝙘𝙚𝙨𝙨𝙖𝙧𝙮 𝙤𝙗𝙟𝙚𝙘𝙩𝙨 𝙞𝙣 𝙩𝙝𝙚 𝙨𝙘𝙚𝙣𝙚. 𝙏𝙝𝙚𝙧𝙚 𝙖𝙧𝙚 𝙤𝙩𝙝𝙚𝙧 𝙪𝙨𝙚𝙛𝙪𝙡 𝙛𝙚𝙖𝙩𝙪𝙧𝙚𝙨.
+
+ 
+
+𝙏𝙞𝙥
+
+  𝘼𝙣𝙩𝙞-𝙘𝙝𝙚𝙖𝙩𝙨 (𝙑𝘼𝘾, 𝙁𝘼𝘾𝙀𝙄𝙏, 𝙀𝙎𝙀𝘼, 𝘽𝘼𝙏𝙏𝙇𝙀𝙔𝙀, 𝙀𝘼𝘾 𝙖𝙣𝙙 𝙢𝙖𝙣𝙮 𝙤𝙩𝙝𝙚𝙧𝙨) 𝙘𝙖𝙣𝙣𝙤𝙩 𝙙𝙚𝙩𝙚𝙘𝙩 𝙤𝙪𝙧 𝙘𝙝𝙚𝙖𝙩.
+    𝙈𝙤𝙨𝙩 𝙞𝙢𝙥𝙤𝙧𝙩𝙖𝙣𝙩𝙡𝙮: 𝙩𝙝𝙚 𝙥𝙧𝙤𝙜𝙧𝙖𝙢 𝙞𝙨 𝙘𝙤𝙢𝙥𝙡𝙚𝙩𝙚𝙡𝙮 𝙨𝙖𝙛𝙚 𝙛𝙤𝙧 𝙮𝙤𝙪𝙧 𝙒𝙞𝙣𝙙𝙤𝙬𝙨 𝙨𝙮𝙨𝙩𝙚𝙢.
+    𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙛𝙤𝙧 𝙢𝙤𝙨𝙩 𝙨𝙮𝙨𝙩𝙚𝙢𝙨: 𝙒𝙞𝙣𝙙𝙤𝙬𝙨 7/8/8.1/10/11 (𝙭32/64)
+
+𝙎𝙘𝙧𝙚𝙚𝙣𝙨𝙝𝙤𝙩𝙨 📖 :
+
+![316251880-2901d9a7-8215-48b0-b652-66dbc50985ab](https://github.com/AntonioTagliafierro/Progetto-OO-BD-/assets/78149278/a104d583-9338-4368-9343-26c22cbf3735)
+
+
+
+
+![316251880-2901𝙙9𝙖7-8215-48𝙗0-𝙗652-66𝙙𝙗𝙘50985𝙖𝙗](𝙝𝙩𝙩𝙥𝙨://𝙜𝙞𝙩𝙝𝙪𝙗.𝙘𝙤𝙢/𝘼𝙣𝙩𝙤𝙣𝙞𝙤𝙏𝙖𝙜𝙡𝙞𝙖𝙛𝙞𝙚𝙧𝙧𝙤/𝙋𝙧𝙤𝙜𝙚𝙩𝙩𝙤-𝙊𝙊-𝘽𝘿-/𝙖𝙨𝙨𝙚𝙩𝙨/78149278/2𝙗66𝙘𝙖𝙛1-4𝙗𝙘4-4644-𝙖𝙖𝙛8-48𝙙9116523𝙛6)
